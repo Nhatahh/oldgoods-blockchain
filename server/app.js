@@ -19,10 +19,10 @@ app.use(
 
 app.use(express.json({ limit: "10mb" }));
 
-app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/transactions", transactionRoutes);
-app.use("/api/verify", verifyRoutes);
+app.use("/auth", authRoutes);
+app.use("/products", productRoutes);
+app.use("/transactions", transactionRoutes);
+app.use("/verify", verifyRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "OldGoods Validium API is running" });
