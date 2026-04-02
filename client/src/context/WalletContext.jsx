@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { ethers } from "ethers";
 import api from "../api/api";
+import { ensureValidiumNetwork } from "../blockchain/network";
 
 const WalletContext = createContext(null);
 
@@ -24,85 +25,113 @@ export function WalletProvider({ children }) {
     setChainId("");
   };
 
-  const refreshWalletInfo = async (addressInput = null) => {
-    if (!window.ethereum) return;
+  const refreshWalletInfo = async (addressParam) => {
+    try {
+      if (!window.ethereum) return;
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const network = await provider.getNetwork();
-    setChainId(network.chainId.toString());
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const network = await provider.getNetwork();
 
-    const address = addressInput || walletAddress;
-    if (!address) return;
+      const address = addressParam || walletAddress;
+      if (!address) return;
 
-    const balance = await provider.getBalance(address);
-    setBalanceNative(ethers.formatUnits(balance, nativeDecimals));
+      const balance = await provider.getBalance(address);
+
+      setChainId(Number(network.chainId));
+      setBalanceNative(ethers.formatEther(balance));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const connectWallet = async () => {
-    if (!window.ethereum) {
-      alert("Bạn chưa cài MetaMask");
-      return;
+    try {
+      if (!window.ethereum) {
+        alert("Bạn chưa cài MetaMask");
+        return;
+      }
+
+      await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      await ensureValidiumNetwork();
+
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+
+      const address = accounts?.[0] || "";
+      if (!address) return;
+
+      setWalletAddress(address);
+      setIsConnected(true);
+      localStorage.setItem("walletAddress", address);
+
+      const loginRes = await api.post("/auth/metamask-login", {
+        walletAddress: address,
+      });
+
+      if (loginRes.data?.sessionTokenBase64) {
+        localStorage.setItem(
+          "sessionTokenBase64",
+          loginRes.data.sessionTokenBase64,
+        );
+      }
+
+      await refreshWalletInfo(address);
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Kết nối ví thất bại");
     }
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-
-    const address = accounts?.[0] || "";
-
-    if (!address) return;
-
-    setWalletAddress(address);
-    setIsConnected(true);
-    localStorage.setItem("walletAddress", address);
-
-    const loginRes = await api.post("/auth/metamask-login", {
-      walletAddress: address,
-    });
-    if (loginRes.data?.sessionTokenBase64) {
-      localStorage.setItem(
-        "sessionTokenBase64",
-        loginRes.data.sessionTokenBase64,
-      );
-    }
-
-    await refreshWalletInfo(address);
   };
 
   const logoutWallet = () => {
     clearLocalWalletState();
   };
-
   const changeWallet = async () => {
-    clearLocalWalletState();
+    try {
+      clearLocalWalletState();
 
-    if (!window.ethereum) {
-      alert("Bạn chưa cài MetaMask");
-      return;
+      if (!window.ethereum) {
+        alert("Bạn chưa cài MetaMask");
+        return;
+      }
+
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }],
+      });
+
+      await ensureValidiumNetwork();
+
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+
+      const address = accounts?.[0] || "";
+      if (!address) return;
+
+      setWalletAddress(address);
+      setIsConnected(true);
+      localStorage.setItem("walletAddress", address);
+
+      const loginRes = await api.post("/auth/metamask-login", {
+        walletAddress: address,
+      });
+
+      if (loginRes.data?.sessionTokenBase64) {
+        localStorage.setItem(
+          "sessionTokenBase64",
+          loginRes.data.sessionTokenBase64,
+        );
+      }
+
+      await refreshWalletInfo(address);
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Đổi ví thất bại");
     }
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-
-    const address = accounts?.[0] || "";
-    if (!address) return;
-
-    setWalletAddress(address);
-    setIsConnected(true);
-    localStorage.setItem("walletAddress", address);
-
-    const loginRes = await api.post("/auth/metamask-login", {
-      walletAddress: address,
-    });
-    if (loginRes.data?.sessionTokenBase64) {
-      localStorage.setItem(
-        "sessionTokenBase64",
-        loginRes.data.sessionTokenBase64,
-      );
-    }
-
-    await refreshWalletInfo(address);
   };
 
   useEffect(() => {

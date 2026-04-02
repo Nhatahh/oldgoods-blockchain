@@ -1,31 +1,40 @@
 import { ethers } from "ethers";
-import { marketplaceAbi } from "./marketplaceAbi";
+import { ensureValidiumNetwork } from "./network";
+import contractArtifact from "../contracts/MarketplaceEscrowHash.json";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-const TARGET_CHAIN_ID = Number(import.meta.env.VITE_CHAIN_ID || 567);
 const NATIVE_DECIMALS = Number(import.meta.env.VITE_NATIVE_DECIMALS || 18);
+
+function normalizeBytes32(hashHex) {
+  if (!hashHex) {
+    throw new Error("Thiếu hash giao dịch.");
+  }
+
+  const normalized = "0x" + String(hashHex).replace(/^0x/, "");
+
+  if (!ethers.isHexString(normalized, 32)) {
+    throw new Error("Hash giao dịch không đúng định dạng bytes32.");
+  }
+
+  return normalized;
+}
 
 async function ensureWalletReady() {
   if (!window.ethereum) {
     throw new Error("Chưa cài MetaMask");
   }
 
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const network = await provider.getNetwork();
-  const currentChainId = Number(network.chainId);
-
-  if (currentChainId !== TARGET_CHAIN_ID) {
-    throw new Error(
-      `Sai mạng. Hãy chuyển MetaMask sang chainId ${TARGET_CHAIN_ID}`,
-    );
+  if (!CONTRACT_ADDRESS) {
+    throw new Error("Thiếu VITE_CONTRACT_ADDRESS trong file .env");
   }
 
+  const provider = await ensureValidiumNetwork();
   const signer = await provider.getSigner();
   const address = await signer.getAddress();
 
   const contract = new ethers.Contract(
     CONTRACT_ADDRESS,
-    marketplaceAbi,
+    contractArtifact.abi,
     signer,
   );
 
@@ -43,11 +52,11 @@ export async function depositForTradeOnChain({
 
   const tx = await contract.depositForTrade(
     businessId,
-    "0x" + hashHex.replace(/^0x/, ""),
+    normalizeBytes32(hashHex),
     sellerWallet,
-    ethers.parseUnits(totalPriceNative, NATIVE_DECIMALS),
+    ethers.parseUnits(String(totalPriceNative), NATIVE_DECIMALS),
     {
-      value: ethers.parseUnits(depositNative, NATIVE_DECIMALS),
+      value: ethers.parseUnits(String(depositNative), NATIVE_DECIMALS),
     },
   );
 
@@ -67,9 +76,9 @@ export async function payRemainingOnChain({
 
   const tx = await contract.payRemaining(
     businessId,
-    "0x" + hashHex.replace(/^0x/, ""),
+    normalizeBytes32(hashHex),
     {
-      value: ethers.parseUnits(remainingNative, NATIVE_DECIMALS),
+      value: ethers.parseUnits(String(remainingNative), NATIVE_DECIMALS),
     },
   );
 
@@ -77,5 +86,23 @@ export async function payRemainingOnChain({
 
   return {
     txHash: receipt.hash,
+  };
+}
+
+export async function getTradeOnChain(businessId) {
+  const { contract } = await ensureWalletReady();
+  const trade = await contract.getTrade(businessId);
+
+  return {
+    businessId: trade.businessId,
+    dataHash: trade.dataHash,
+    buyer: trade.buyer,
+    seller: trade.seller,
+    totalPrice: trade.totalPrice.toString(),
+    depositAmount: trade.depositAmount.toString(),
+    remainingAmount: trade.remainingAmount.toString(),
+    createdAt: Number(trade.createdAt),
+    updatedAt: Number(trade.updatedAt),
+    status: Number(trade.status),
   };
 }
