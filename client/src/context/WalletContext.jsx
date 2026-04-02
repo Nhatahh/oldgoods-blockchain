@@ -177,7 +177,6 @@ export function WalletProvider({ children }) {
     const handleChainChanged = async () => {
       try {
         await ensureValidiumNetwork();
-
         await refreshWalletInfo(walletAddress);
       } catch (error) {
         console.error(error);
@@ -215,6 +214,7 @@ export function WalletProvider({ children }) {
         if (!localStorage.getItem("walletAddress")) return;
 
         await ensureValidiumNetwork();
+        await refreshWalletInfo(localStorage.getItem("walletAddress"));
       } catch (error) {
         console.error(error);
         clearLocalWalletState();
