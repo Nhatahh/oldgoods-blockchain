@@ -51,14 +51,12 @@ export function WalletProvider({ children }) {
         return;
       }
 
-      await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
+      // Kiểm tra / ép chuyển sang Validium trước
       await ensureValidiumNetwork();
 
+      // Chỉ sau khi đúng mạng mới xin quyền kết nối tài khoản
       const accounts = await window.ethereum.request({
-        method: "eth_accounts",
+        method: "eth_requestAccounts",
       });
 
       const address = accounts?.[0] || "";
@@ -89,6 +87,7 @@ export function WalletProvider({ children }) {
   const logoutWallet = () => {
     clearLocalWalletState();
   };
+
   const changeWallet = async () => {
     try {
       clearLocalWalletState();
@@ -98,12 +97,14 @@ export function WalletProvider({ children }) {
         return;
       }
 
+      // Ép đúng mạng trước
+      await ensureValidiumNetwork();
+
+      // Sau đó mới xin quyền chọn tài khoản
       await window.ethereum.request({
         method: "wallet_requestPermissions",
         params: [{ eth_accounts: {} }],
       });
-
-      await ensureValidiumNetwork();
 
       const accounts = await window.ethereum.request({
         method: "eth_accounts",

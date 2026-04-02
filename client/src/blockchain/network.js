@@ -54,8 +54,14 @@ export async function ensureValidiumNetwork() {
           method: "wallet_addEthereumChain",
           params: [VALIDIUM_NETWORK_PARAMS],
         });
-      } catch (addError) {
-        throw new Error("Không thể thêm mạng Validium vào MetaMask.");
+
+        // ép switch lại sau khi add
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: VALIDIUM_CHAIN_ID_HEX }],
+        });
+      } catch {
+        throw new Error("Không thể thêm hoặc chuyển sang mạng Validium.");
       }
     } else {
       throw new Error("Vui lòng chuyển MetaMask sang mạng Validium.");
