@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Wallet, CheckCircle2 } from "lucide-react";
-import api from "../api/api";
+import { useWallet } from "../context/WalletContext";
 
 function shortAddress(addr) {
   if (!addr) return "";
@@ -8,35 +8,17 @@ function shortAddress(addr) {
 }
 
 export default function WalletConnect({ onLogin }) {
-  const [wallet, setWallet] = useState(
-    localStorage.getItem("walletAddress") || "",
-  );
+  const { walletAddress, isConnected, connectWallet } = useWallet();
   const [loading, setLoading] = useState(false);
 
-  const connectWallet = async () => {
+  const handleConnect = async () => {
     try {
-      if (!window.ethereum) {
-        alert("Bạn chưa cài MetaMask");
-        return;
-      }
-
       setLoading(true);
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      const walletAddress = accounts[0];
-
-      const res = await api.post("/auth/metamask-login", { walletAddress });
-
-      localStorage.setItem("walletAddress", walletAddress);
-      localStorage.setItem("sessionTokenBase64", res.data.sessionTokenBase64);
-
-      setWallet(walletAddress);
-      if (onLogin) onLogin(walletAddress);
+      const address = await connectWallet();
+      if (onLogin && address) onLogin(address);
     } catch (error) {
       console.error(error);
-      alert("Kết nối ví thất bại");
+      alert(error.message || "Kết nối ví thất bại");
     } finally {
       setLoading(false);
     }
@@ -44,18 +26,20 @@ export default function WalletConnect({ onLogin }) {
 
   return (
     <div className="og-wallet-connect">
-      {wallet ? (
+      {isConnected && walletAddress ? (
         <div className="og-wallet-inline">
           <CheckCircle2 size={18} className="og-text-success" />
           <span>
             Ví đang dùng:{" "}
-            <strong className="og-address-text">{shortAddress(wallet)}</strong>
+            <strong className="og-address-text">
+              {shortAddress(walletAddress)}
+            </strong>
           </span>
         </div>
       ) : (
         <button
           className="og-btn og-btn--primary"
-          onClick={connectWallet}
+          onClick={handleConnect}
           disabled={loading}
           type="button"
         >

@@ -79,6 +79,8 @@ export function WalletProvider({ children }) {
       }
 
       await refreshWalletInfo(address);
+
+      return address;
     } catch (error) {
       console.error(error);
       alert(error.message || "Kết nối ví thất bại");
