@@ -29,7 +29,7 @@ export function WalletProvider({ children }) {
     try {
       if (!window.ethereum) return;
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = await ensureValidiumNetwork();
       const network = await provider.getNetwork();
 
       const address = addressParam || walletAddress;
@@ -138,32 +138,52 @@ export function WalletProvider({ children }) {
     if (!window.ethereum) return;
 
     const handleAccountsChanged = async (accounts) => {
-      const next = accounts?.[0] || "";
+      try {
+        const next = accounts?.[0] || "";
 
-      if (!next) {
+        if (!next) {
+          clearLocalWalletState();
+          return;
+        }
+
+        await ensureValidiumNetwork();
+
+        setWalletAddress(next);
+        setIsConnected(true);
+        localStorage.setItem("walletAddress", next);
+
+        const loginRes = await api.post("/auth/metamask-login", {
+          walletAddress: next,
+        });
+
+        if (loginRes.data?.sessionTokenBase64) {
+          localStorage.setItem(
+            "sessionTokenBase64",
+            loginRes.data.sessionTokenBase64,
+          );
+        }
+
+        await refreshWalletInfo(next);
+      } catch (error) {
+        console.error(error);
+
+        alert("Sai mạng. Chỉ hỗ trợ Validium.");
         clearLocalWalletState();
-        return;
       }
-
-      setWalletAddress(next);
-      setIsConnected(true);
-      localStorage.setItem("walletAddress", next);
-
-      const loginRes = await api.post("/auth/metamask-login", {
-        walletAddress: next,
-      });
-      if (loginRes.data?.sessionTokenBase64) {
-        localStorage.setItem(
-          "sessionTokenBase64",
-          loginRes.data.sessionTokenBase64,
-        );
-      }
-
-      await refreshWalletInfo(next);
     };
 
-    const handleChainChanged = () => {
-      window.location.reload();
+    const handleChainChanged = async () => {
+      try {
+        await ensureValidiumNetwork();
+
+        await refreshWalletInfo(walletAddress);
+      } catch (error) {
+        console.error(error);
+
+        alert("Bạn đang ở sai mạng. Chỉ hỗ trợ Validium.");
+
+        clearLocalWalletState();
+      }
     };
 
     window.ethereum.on("accountsChanged", handleAccountsChanged);
@@ -208,3 +228,22 @@ export function WalletProvider({ children }) {
 export function useWallet() {
   return useContext(WalletContext);
 }
+
+useEffect(() => {
+  const checkNetworkOnLoad = async () => {
+    try {
+      if (!window.ethereum || !walletAddress) return;
+
+      await ensureValidiumNetwork();
+      await refreshWalletInfo(walletAddress);
+    } catch (error) {
+      console.error(error);
+
+      alert("Bạn đang ở sai mạng. Hệ thống chỉ hỗ trợ Validium.");
+
+      clearLocalWalletState();
+    }
+  };
+
+  checkNetworkOnLoad();
+}, []);
