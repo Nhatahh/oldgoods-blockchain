@@ -208,6 +208,22 @@ export function WalletProvider({ children }) {
     }
   }, [walletAddress]);
 
+  useEffect(() => {
+    const checkNetworkOnLoad = async () => {
+      try {
+        if (!window.ethereum) return;
+        if (!localStorage.getItem("walletAddress")) return;
+
+        await ensureValidiumNetwork();
+      } catch (error) {
+        console.error(error);
+        clearLocalWalletState();
+      }
+    };
+
+    checkNetworkOnLoad();
+  }, []);
+
   const value = useMemo(
     () => ({
       walletAddress,
@@ -230,22 +246,3 @@ export function WalletProvider({ children }) {
 export function useWallet() {
   return useContext(WalletContext);
 }
-
-useEffect(() => {
-  const checkNetworkOnLoad = async () => {
-    try {
-      if (!window.ethereum || !walletAddress) return;
-
-      await ensureValidiumNetwork();
-      await refreshWalletInfo(walletAddress);
-    } catch (error) {
-      console.error(error);
-
-      alert("Bạn đang ở sai mạng. Hệ thống chỉ hỗ trợ Validium.");
-
-      clearLocalWalletState();
-    }
-  };
-
-  checkNetworkOnLoad();
-}, []);
