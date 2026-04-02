@@ -41,6 +41,7 @@ export function WalletProvider({ children }) {
       setBalanceNative(ethers.formatEther(balance));
     } catch (error) {
       console.error(error);
+      clearLocalWalletState();
     }
   };
 
