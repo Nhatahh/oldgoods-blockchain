@@ -6,63 +6,74 @@ export default function MyProductCard({ item, onEdit, onDelete }) {
   const canEditOrDelete = item.status === "available";
 
   return (
-    <article className="product-card premium-card">
-      <div className="product-image-wrap">
+    <article className="og-card">
+      {/* Khối Hình Ảnh */}
+      <div className="og-card__img-wrap">
         <img
+          className="og-card__img"
           src={
             item.imageUrl || "https://via.placeholder.com/600x400?text=OldGoods"
           }
           alt={item.title}
+          loading="lazy"
         />
-        <span className={`status-chip overlay ${item.status}`}>
+        {/* Tái sử dụng class og-status từ trang Transactions */}
+        <span className={`og-status og-status--${item.status} og-card__badge`}>
           {item.status}
         </span>
       </div>
 
-      <div className="product-card-body">
-        <h3 className="product-title">{item.title}</h3>
-        <p className="desc line-clamp-2">{item.description}</p>
+      {/* Khối Nội Dung */}
+      <div className="og-card__body">
+        <h3 className="og-card__title" title={item.title}>
+          {item.title}
+        </h3>
+        <p className="og-card__desc">{item.description}</p>
 
-        <div className="price-box">
-          <div>
+        {/* Khối Giá */}
+        <div className="og-card__price-grid">
+          <div className="og-card__price-item">
             <small>Giá tổng</small>
             <strong>
-              {item.priceNative} {NATIVE_SYMBOL}
+              {item.priceNative}{" "}
+              <span className="og-symbol">{NATIVE_SYMBOL}</span>
             </strong>
           </div>
-          <div>
+          <div className="og-card__price-item og-card__price-item--highlight">
             <small>Đặt cọc</small>
             <strong>
-              {item.depositNative} {NATIVE_SYMBOL}
+              {item.depositNative}{" "}
+              <span className="og-symbol">{NATIVE_SYMBOL}</span>
             </strong>
           </div>
         </div>
 
-        <div className="my-product-actions">
+        {/* Nút Hành Động */}
+        <div className="og-card__actions-grid">
           <button
-            className="btn btn-outline"
+            className="og-btn og-btn--outline"
             onClick={onEdit}
             disabled={!canEditOrDelete}
             type="button"
           >
-            <Pencil size={16} />
-            Sửa
+            <Pencil size={16} /> Sửa
           </button>
 
           <button
-            className="btn btn-danger"
+            className="og-btn og-btn--danger"
             onClick={onDelete}
             disabled={!canEditOrDelete}
             type="button"
           >
-            <Trash2 size={16} />
-            Xóa
+            <Trash2 size={16} /> Xóa
           </button>
         </div>
 
+        {/* Ghi chú nếu bị disable */}
         {!canEditOrDelete && (
-          <p className="small-note">
-            Chỉ có thể sửa/xóa khi sản phẩm đang ở trạng thái available.
+          <p className="og-card__note">
+            Chỉ có thể sửa/xóa khi sản phẩm ở trạng thái{" "}
+            <strong>available</strong>.
           </p>
         )}
       </div>

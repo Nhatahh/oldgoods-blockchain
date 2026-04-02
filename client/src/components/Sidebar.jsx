@@ -17,11 +17,11 @@ const links = [
 
 export default function Sidebar() {
   return (
-    <aside className="sidebar">
-      <div className="sidebar-card">
-        <div className="sidebar-title">Workspace</div>
+    <aside className="og-sidebar">
+      <div className="og-sidebar__inner">
+        <div className="og-sidebar__title">Workspace</div>
 
-        <nav className="sidebar-nav">
+        <nav className="og-sidebar__nav">
           {links.map((item) => {
             const Icon = item.icon;
             return (
@@ -29,10 +29,10 @@ export default function Sidebar() {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `sidebar-link ${isActive ? "sidebar-link-active" : ""}`
+                  `og-sidebar__link ${isActive ? "og-sidebar__link--active" : ""}`
                 }
               >
-                <Icon size={18} />
+                <Icon size={18} className="og-sidebar__icon" />
                 <span>{item.label}</span>
               </NavLink>
             );

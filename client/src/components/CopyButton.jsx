@@ -13,10 +13,11 @@ export default function CopyButton({ text, label = "Đã copy" }) {
 
   return (
     <button
-      className="icon-btn"
+      className="og-icon-btn"
       onClick={handleCopy}
       type="button"
       title="Copy"
+      aria-label="Copy to clipboard"
     >
       <Copy size={16} />
     </button>

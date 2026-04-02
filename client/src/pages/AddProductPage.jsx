@@ -75,94 +75,148 @@ export default function AddProductPage() {
   };
 
   return (
-    <div className="form-page-wrap">
-      <div className="page-card form-card-premium">
-        <div className="form-page-header">
-          <div className="form-icon-badge">
-            <PackagePlus size={20} />
+    <div className="og-page-wrapper">
+      <div className="og-form-card">
+        <div className="og-form-card__header">
+          <div className="og-icon-badge">
+            <PackagePlus size={24} />
           </div>
           <div>
-            <h1>Đăng sản phẩm mới</h1>
-            <p>Thêm món đồ cũ nội bộ và sẵn sàng giao dịch bằng MetaMask.</p>
+            <h1 className="og-form-card__title">Đăng sản phẩm mới</h1>
+            <p className="og-form-card__desc">
+              Thêm món đồ cũ nội bộ và sẵn sàng giao dịch bằng MetaMask.
+            </p>
           </div>
         </div>
 
-        <form className="form-grid" onSubmit={submit}>
-          <input
-            className="input"
-            name="title"
-            placeholder="Tên sản phẩm"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
+        <form className="og-form" onSubmit={submit}>
+          <div className="og-form__row">
+            <div className="og-form-group">
+              <label htmlFor="title" className="og-label">
+                Tên sản phẩm
+              </label>
+              <input
+                id="title"
+                className="og-input"
+                name="title"
+                placeholder="Ví dụ: Bàn phím cơ Keychron..."
+                value={form.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <input
-            className="input"
-            name="category"
-            placeholder="Danh mục"
-            value={form.category}
-            onChange={handleChange}
-          />
+            <div className="og-form-group">
+              <label htmlFor="category" className="og-label">
+                Danh mục
+              </label>
+              <input
+                id="category"
+                className="og-input"
+                name="category"
+                placeholder="Ví dụ: Đồ công nghệ"
+                value={form.category}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-          <input
-            className="input"
-            name="priceNative"
-            placeholder={`Giá tổng (${NATIVE_SYMBOL})`}
-            value={form.priceNative}
-            onChange={handleChange}
-            required
-          />
+          <div className="og-form__row">
+            <div className="og-form-group">
+              <label htmlFor="priceNative" className="og-label">
+                Giá tổng ({NATIVE_SYMBOL})
+              </label>
+              <input
+                id="priceNative"
+                className="og-input"
+                type="number"
+                step="any"
+                name="priceNative"
+                placeholder="0.00"
+                value={form.priceNative}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <input
-            className="input"
-            name="depositNative"
-            placeholder={`Đặt cọc (${NATIVE_SYMBOL})`}
-            value={form.depositNative}
-            onChange={handleChange}
-            required
-          />
+            <div className="og-form-group">
+              <label htmlFor="depositNative" className="og-label">
+                Đặt cọc ({NATIVE_SYMBOL})
+              </label>
+              <input
+                id="depositNative"
+                className="og-input"
+                type="number"
+                step="any"
+                name="depositNative"
+                placeholder="0.00"
+                value={form.depositNative}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-          <textarea
-            className="input full-span"
-            rows="6"
-            name="description"
-            placeholder="Mô tả sản phẩm"
-            value={form.description}
-            onChange={handleChange}
-          />
-
-          <div className="input-with-icon full-span">
-            <ImagePlus size={18} />
-            <input
-              className="input no-shadow no-border"
-              name="imageUrl"
-              placeholder="Dán link ảnh http/https"
-              value={form.imageUrl}
+          <div className="og-form-group">
+            <label htmlFor="description" className="og-label">
+              Mô tả chi tiết
+            </label>
+            <textarea
+              id="description"
+              className="og-input og-textarea"
+              rows="5"
+              name="description"
+              placeholder="Tình trạng, thời gian sử dụng, phụ kiện đi kèm..."
+              value={form.description}
               onChange={handleChange}
             />
           </div>
 
+          <div className="og-form-group">
+            <label htmlFor="imageUrl" className="og-label">
+              Hình ảnh sản phẩm
+            </label>
+            <div className="og-input-wrapper">
+              <ImagePlus className="og-input-icon" size={18} />
+              <input
+                id="imageUrl"
+                className="og-input og-input--with-icon"
+                name="imageUrl"
+                placeholder="Dán link ảnh http/https vào đây..."
+                value={form.imageUrl}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
           {form.imageUrl && (
-            <div className="full-span preview-box">
-              {!imgError ? (
-                <img
-                  src={form.imageUrl}
-                  alt="Preview"
-                  className="preview-image"
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <div className="preview-error">
-                  Không tải được ảnh từ link này
-                </div>
-              )}
+            <div className="og-form-group">
+              <div className="og-preview-box">
+                {!imgError ? (
+                  <img
+                    src={form.imageUrl}
+                    alt="Preview"
+                    className="og-preview-image"
+                    onError={() => setImgError(true)}
+                  />
+                ) : (
+                  <div className="og-preview-error">
+                    <span>⚠️ Không tải được ảnh từ đường link này</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
-          <button className="btn btn-primary" type="submit" disabled={loading}>
-            {loading ? "Đang xử lý..." : "Đăng bán"}
-          </button>
+          <div className="og-form__actions">
+            <button
+              className="og-btn og-btn--primary og-btn--full"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Đang xử lý trên mạng..." : "Đăng bán sản phẩm"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

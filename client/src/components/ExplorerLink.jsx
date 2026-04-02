@@ -9,14 +9,14 @@ export default function ExplorerLink({ txHash, label = "Explorer" }) {
 
   return (
     <a
-      className="explorer-link"
+      className="og-explorer-link"
       href={href}
       target="_blank"
       rel="noreferrer"
-      title="Mở trên explorer"
+      title="Mở giao dịch trên Block Explorer"
     >
-      <ExternalLink size={14} />
-      {label}
+      <ExternalLink size={14} className="og-explorer-link__icon" />
+      <span>{label}</span>
     </a>
   );
 }

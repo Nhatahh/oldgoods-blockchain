@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { Wallet, CheckCircle2 } from "lucide-react";
 import api from "../api/api";
+
+function shortAddress(addr) {
+  if (!addr) return "";
+  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+}
 
 export default function WalletConnect({ onLogin }) {
   const [wallet, setWallet] = useState(
     localStorage.getItem("walletAddress") || "",
   );
+  const [loading, setLoading] = useState(false);
 
   const connectWallet = async () => {
     try {
@@ -13,6 +20,7 @@ export default function WalletConnect({ onLogin }) {
         return;
       }
 
+      setLoading(true);
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -29,17 +37,31 @@ export default function WalletConnect({ onLogin }) {
     } catch (error) {
       console.error(error);
       alert("Kết nối ví thất bại");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="wallet-box">
+    <div className="og-wallet-connect">
       {wallet ? (
-        <p>
-          Ví đang dùng: <strong>{wallet}</strong>
-        </p>
+        <div className="og-wallet-inline">
+          <CheckCircle2 size={18} className="og-text-success" />
+          <span>
+            Ví đang dùng:{" "}
+            <strong className="og-address-text">{shortAddress(wallet)}</strong>
+          </span>
+        </div>
       ) : (
-        <button onClick={connectWallet}>Kết nối MetaMask</button>
+        <button
+          className="og-btn og-btn--primary"
+          onClick={connectWallet}
+          disabled={loading}
+          type="button"
+        >
+          <Wallet size={18} />
+          {loading ? "Đang mở MetaMask..." : "Kết nối MetaMask"}
+        </button>
       )}
     </div>
   );

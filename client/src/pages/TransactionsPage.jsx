@@ -45,23 +45,32 @@ export default function TransactionsPage() {
 
   const handleVerify = async (id) => {
     try {
+      toast.loading("Đang kiểm tra đối chiếu Hash...", { id: "verify" });
       const res = await api.get(`/verify/${id}`);
       if (res.data.isMatch) {
-        toast.success("Hash khớp, dữ liệu toàn vẹn");
+        toast.success("Hash khớp! Dữ liệu vẹn toàn.", { id: "verify" });
       } else {
-        toast.error("Hash không khớp, dữ liệu đã thay đổi");
+        toast.error(
+          "Cảnh báo: Hash không khớp, dữ liệu off-chain đã bị thay đổi!",
+          { id: "verify" },
+        );
       }
     } catch (error) {
       console.error(error);
-      toast.error("Lỗi verify");
+      toast.error("Lỗi xác thực (Verify)", { id: "verify" });
     }
   };
 
   if (loading) {
     return (
-      <div className="page-card">
-        <h1>Lịch sử giao dịch</h1>
-        <div className="tx-list">
+      <div className="og-page-layout">
+        <div className="og-header-card">
+          <h1 className="og-header-card__title">Lịch sử giao dịch</h1>
+          <p className="og-header-card__desc">
+            Đang tải dữ liệu từ toàn bộ hệ thống chợ...
+          </p>
+        </div>
+        <div className="og-tx-list">
           <TxSkeleton />
           <TxSkeleton />
           <TxSkeleton />
@@ -72,152 +81,182 @@ export default function TransactionsPage() {
 
   if (!transactions.length) {
     return (
-      <div className="page-card">
-        <EmptyState
-          title="Chưa có giao dịch nào"
-          desc="Khi người mua đặt cọc hoặc thanh toán, giao dịch sẽ xuất hiện tại đây."
-        />
+      <div className="og-page-layout">
+        <div className="og-header-card og-header-card--center">
+          <EmptyState
+            title="Chưa có giao dịch nào"
+            desc="Khi người mua đặt cọc hoặc thanh toán, toàn bộ tiến trình sẽ xuất hiện tại đây."
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="page-card">
-      <div className="page-top-row">
-        <div>
-          <h1>Lịch sử giao dịch</h1>
-          <p className="subtle-text">
-            Theo dõi toàn bộ giao dịch và trạng thái blockchain proof.
-          </p>
-        </div>
+    <div className="og-page-layout">
+      <div className="og-header-card">
+        <h1 className="og-header-card__title">Lịch sử giao dịch</h1>
+        <p className="og-header-card__desc">
+          Theo dõi toàn bộ tiến trình giao dịch và kiểm chứng (Verify) trạng
+          thái blockchain proof của chợ nội bộ.
+        </p>
       </div>
 
-      <div className="tx-list upgraded-tx-list">
+      <div className="og-tx-list">
         {transactions.map((tx) => (
-          <div className="tx-item tx-item-advanced" key={tx._id}>
-            <div className="tx-top">
-              <div>
+          <div className="og-tx-card" key={tx._id}>
+            {/* Header Giao Dịch */}
+            <div className="og-tx-card__top">
+              <div className="og-tx-card__title-group">
                 {tx.productId?._id ? (
                   <Link
                     to={`/product/${tx.productId._id}`}
-                    className="tx-product-link"
+                    className="og-tx-title"
                   >
-                    <h3>{tx.productId?.title || "Không rõ sản phẩm"}</h3>
+                    {tx.productId?.title || "Không rõ sản phẩm"}
                   </Link>
                 ) : (
-                  <h3>{tx.productId?.title || "Không rõ sản phẩm"}</h3>
+                  <h3 className="og-tx-title og-tx-title--text">
+                    {tx.productId?.title || "Không rõ sản phẩm"}
+                  </h3>
                 )}
-
-                <p className="subtle-text">
+                <p className="og-tx-category">
                   {tx.productId?.category || "Khác"}
                 </p>
               </div>
-
-              <span className={`status-chip ${tx.status}`}>
+              <span className={`og-status og-status--${tx.status}`}>
                 {statusLabel(tx.status)}
               </span>
             </div>
 
-            <div className="tx-timeline">
-              <div className="timeline-node done">
-                <Clock3 size={15} />
-                <span>Tạo giao dịch</span>
+            {/* Trục thời gian (Timeline) */}
+            <div className="og-timeline">
+              <div className="og-timeline-step og-timeline-step--done">
+                <div className="og-timeline-icon">
+                  <Clock3 size={16} />
+                </div>
+                <span className="og-timeline-text">Tạo giao dịch</span>
               </div>
 
               <div
-                className={`timeline-node ${tx.status === "deposited" || tx.status === "completed" ? "done" : ""}`}
+                className={`og-timeline-step ${
+                  tx.status === "deposited" || tx.status === "completed"
+                    ? "og-timeline-step--done"
+                    : ""
+                }`}
               >
-                <ShieldCheck size={15} />
-                <span>Đặt cọc</span>
+                <div className="og-timeline-icon">
+                  <ShieldCheck size={16} />
+                </div>
+                <span className="og-timeline-text">Đặt cọc</span>
               </div>
 
               <div
-                className={`timeline-node ${tx.status === "completed" ? "done" : ""}`}
+                className={`og-timeline-step ${
+                  tx.status === "completed" ? "og-timeline-step--done" : ""
+                }`}
               >
-                <CheckCircle2 size={15} />
-                <span>Hoàn tất</span>
+                <div className="og-timeline-icon">
+                  <CheckCircle2 size={16} />
+                </div>
+                <span className="og-timeline-text">Hoàn tất</span>
               </div>
             </div>
 
-            <div className="tx-grid">
-              <div>
-                <strong>Buyer:</strong> {tx.buyerWallet}
+            {/* Chi tiết giao dịch */}
+            <div className="og-tx-card__details">
+              <div className="og-tx-detail-item">
+                <small>Buyer</small>
+                <strong className="og-address-text">
+                  {shortHash(tx.buyerWallet)}
+                </strong>
               </div>
-              <div>
-                <strong>Seller:</strong> {tx.sellerWallet}
+              <div className="og-tx-detail-item">
+                <small>Seller</small>
+                <strong className="og-address-text">
+                  {shortHash(tx.sellerWallet)}
+                </strong>
               </div>
-              <div>
-                <strong>Tổng tiền:</strong> {tx.totalPriceNative}{" "}
-                {NATIVE_SYMBOL}
+              <div className="og-tx-detail-item">
+                <small>Tổng tiền</small>
+                <strong>
+                  {tx.totalPriceNative} {NATIVE_SYMBOL}
+                </strong>
               </div>
-              <div>
-                <strong>Đặt cọc:</strong> {tx.depositNative} {NATIVE_SYMBOL}
+              <div className="og-tx-detail-item">
+                <small>Đặt cọc</small>
+                <strong>
+                  {tx.depositNative} {NATIVE_SYMBOL}
+                </strong>
               </div>
-              <div>
-                <strong>Còn lại:</strong> {tx.remainingNative} {NATIVE_SYMBOL}
+              <div className="og-tx-detail-item">
+                <small>Còn lại</small>
+                <strong>
+                  {tx.remainingNative} {NATIVE_SYMBOL}
+                </strong>
               </div>
-              <div>
-                <strong>Verified:</strong> {tx.verified ? "true" : "false"}
+              <div className="og-tx-detail-item">
+                <small>Verified (Mặc định)</small>
+                <strong
+                  className={tx.verified ? "og-text-success" : "og-text-danger"}
+                >
+                  {tx.verified ? "Hợp lệ" : "Chưa xác nhận"}
+                </strong>
               </div>
             </div>
 
-            <div className="proof-panel proof-panel-list">
-              <div className="proof-row">
-                <span>Deposit Tx</span>
-                <div className="proof-value">
-                  <code>
+            {/* Proofs */}
+            <div className="og-tx-proofs">
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Deposit Tx</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">
                     {tx.depositTxHash ? shortHash(tx.depositTxHash) : "chưa có"}
                   </code>
                   {tx.depositTxHash && (
                     <>
-                      <CopyButton
-                        text={tx.depositTxHash}
-                        label="Đã copy deposit tx hash"
-                      />
+                      <CopyButton text={tx.depositTxHash} label="Đã copy" />
                       <ExplorerLink txHash={tx.depositTxHash} />
                     </>
                   )}
                 </div>
               </div>
 
-              <div className="proof-row">
-                <span>Remaining Tx</span>
-                <div className="proof-value">
-                  <code>
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Remaining Tx</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">
                     {tx.remainingTxHash
                       ? shortHash(tx.remainingTxHash)
                       : "chưa có"}
                   </code>
                   {tx.remainingTxHash && (
                     <>
-                      <CopyButton
-                        text={tx.remainingTxHash}
-                        label="Đã copy remaining tx hash"
-                      />
+                      <CopyButton text={tx.remainingTxHash} label="Đã copy" />
                       <ExplorerLink txHash={tx.remainingTxHash} />
                     </>
                   )}
                 </div>
               </div>
 
-              <div className="proof-row">
-                <span>Local Hash</span>
-                <div className="proof-value">
-                  <code>{shortHash(tx.txHashLocal)}</code>
-                  <CopyButton
-                    text={tx.txHashLocal}
-                    label="Đã copy local hash"
-                  />
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Local Hash</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">{shortHash(tx.txHashLocal)}</code>
+                  <CopyButton text={tx.txHashLocal} label="Đã copy" />
                 </div>
               </div>
             </div>
 
-            <button
-              className="btn btn-outline"
-              onClick={() => handleVerify(tx._id)}
-            >
-              Verify Hash
-            </button>
+            {/* Action Bar */}
+            <div className="og-tx-card__actions">
+              <button
+                className="og-btn og-btn--outline"
+                onClick={() => handleVerify(tx._id)}
+              >
+                <ShieldCheck size={16} /> Xác thực Hash (Verify)
+              </button>
+            </div>
           </div>
         ))}
       </div>

@@ -64,24 +64,31 @@ export default function MyProductsPage() {
     }
   };
 
+  // Trạng thái chưa kết nối ví
   if (!isConnected) {
     return (
-      <div className="page-card">
-        <EmptyState
-          title="Chưa kết nối ví"
-          desc="Hãy kết nối MetaMask để xem sản phẩm của bạn."
-        />
+      <div className="og-page-layout">
+        <div className="og-header-card og-header-card--center">
+          <EmptyState
+            title="Chưa kết nối ví"
+            desc="Hãy kết nối MetaMask để xem quản lý sản phẩm của bạn."
+          />
+        </div>
       </div>
     );
   }
 
+  // Trạng thái đang tải dữ liệu
   if (loading) {
     return (
-      <div>
-        <div className="page-card">
-          <h1>Sản phẩm của tôi</h1>
+      <div className="og-page-layout">
+        <div className="og-header-card">
+          <h1 className="og-header-card__title">Sản phẩm của tôi</h1>
+          <p className="og-header-card__desc">
+            Đang tải dữ liệu từ hệ thống...
+          </p>
         </div>
-        <section className="product-grid">
+        <section className="og-grid">
           <ProductCardSkeleton />
           <ProductCardSkeleton />
           <ProductCardSkeleton />
@@ -90,26 +97,27 @@ export default function MyProductsPage() {
     );
   }
 
+  // Render chính
   return (
     <>
-      <div>
-        <div className="page-card">
-          <h1>Sản phẩm của tôi</h1>
-          <p className="subtle-text">
-            Bạn có thể chỉnh sửa hoặc xóa sản phẩm của mình khi sản phẩm còn khả
-            dụng.
+      <div className="og-page-layout">
+        <div className="og-header-card">
+          <h1 className="og-header-card__title">Sản phẩm của tôi</h1>
+          <p className="og-header-card__desc">
+            Bạn có thể xem trạng thái, chỉnh sửa hoặc xóa sản phẩm của mình khi
+            chúng còn khả dụng.
           </p>
         </div>
 
         {products.length === 0 ? (
-          <div className="page-card">
+          <div className="og-header-card og-header-card--center">
             <EmptyState
               title="Bạn chưa đăng sản phẩm nào"
-              desc="Hãy vào trang Đăng bán để thêm món đồ đầu tiên."
+              desc="Hãy vào trang Đăng bán để thêm món đồ đầu tiên lên chợ nội bộ."
             />
           </div>
         ) : (
-          <section className="product-grid">
+          <section className="og-grid">
             {products.map((item) => (
               <MyProductCard
                 key={item._id}
@@ -122,6 +130,7 @@ export default function MyProductsPage() {
         )}
       </div>
 
+      {/* Modals giữ nguyên logic */}
       <EditProductModal
         product={editingProduct}
         open={!!editingProduct}

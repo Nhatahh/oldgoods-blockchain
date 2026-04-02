@@ -12,20 +12,25 @@ export default function ConfirmModal({
   if (!open) return null;
 
   return (
-    <div className="modal-overlay" onClick={loading ? undefined : onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>{title}</h3>
+    <div className="og-modal-overlay" onClick={loading ? undefined : onClose}>
+      <div
+        className="og-modal-card"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="og-modal-header">
+          <h3 className="og-modal-title">{title}</h3>
         </div>
 
-        <div className="modal-body">
-          {description && <p>{description}</p>}
+        <div className="og-modal-body">
+          {description && <p className="og-modal-desc">{description}</p>}
           {children}
         </div>
 
-        <div className="modal-actions">
+        <div className="og-modal-actions">
           <button
-            className="btn btn-outline"
+            className="og-btn og-btn--outline"
             onClick={onClose}
             disabled={loading}
             type="button"
@@ -34,7 +39,7 @@ export default function ConfirmModal({
           </button>
 
           <button
-            className="btn btn-primary"
+            className="og-btn og-btn--primary"
             onClick={onConfirm}
             disabled={loading}
             type="button"

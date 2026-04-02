@@ -30,90 +30,97 @@ export default function Header() {
   } = useWallet();
 
   return (
-    <header className="header">
-      <div className="brand">
-        <div className="brand-logo">OG</div>
-        <div>
-          <h2>OldGoods Web3 Dashboard</h2>
-          <p>Mua bán đồ cũ nội bộ • MetaMask • Validium • Escrow</p>
-        </div>
-      </div>
-
-      <nav className="menu">
-        <Link className={location.pathname === "/" ? "active-link" : ""} to="/">
-          Trang chủ
-        </Link>
-        <Link
-          className={location.pathname === "/add-product" ? "active-link" : ""}
-          to="/add-product"
-        >
-          Đăng bán
-        </Link>
-        <Link
-          className={location.pathname === "/transactions" ? "active-link" : ""}
-          to="/transactions"
-        >
-          Giao dịch
-        </Link>
-      </nav>
-
-      <div className="wallet-panel">
-        <ThemeToggle />
-
-        <div className="network-badges">
-          <span className="top-badge">
-            <Landmark size={14} />
-            Validium
-          </span>
-          <span className="top-badge soft">
-            <ShieldCheck size={14} />
-            Chain {chainId || "?"}
-          </span>
+    <header className="og-header">
+      <div className="og-header__container">
+        {/* Left: Brand */}
+        <div className="og-brand">
+          <div className="og-brand__logo">OG</div>
+          <div className="og-brand__text">
+            <h2>OldGoods</h2>
+            <p>Web3 Escrow Market</p>
+          </div>
         </div>
 
-        {isConnected ? (
-          <div className="wallet-box-advanced">
-            <div className="wallet-box-top">
-              <div className="wallet-pill">
-                <span className="dot"></span>
-                <Wallet size={14} />
-                {shortAddress(walletAddress)}
-              </div>
-              <CopyButton text={walletAddress} label="Đã copy địa chỉ ví" />
-            </div>
+        {/* Center: Navigation */}
+        <nav className="og-nav">
+          <Link
+            className={`og-nav__link ${location.pathname === "/" ? "og-nav__link--active" : ""}`}
+            to="/"
+          >
+            Trang chủ
+          </Link>
+          <Link
+            className={`og-nav__link ${location.pathname === "/add-product" ? "og-nav__link--active" : ""}`}
+            to="/add-product"
+          >
+            Đăng bán
+          </Link>
+          <Link
+            className={`og-nav__link ${location.pathname === "/transactions" ? "og-nav__link--active" : ""}`}
+            to="/transactions"
+          >
+            Giao dịch
+          </Link>
+        </nav>
 
-            <div className="wallet-metrics">
-              <small>Số dư</small>
-              <strong>
-                {Number(balanceNative).toFixed(4)} {NATIVE_SYMBOL}
-              </strong>
-            </div>
-
-            <div className="wallet-action-row">
-              <button
-                className="btn btn-outline small-btn"
-                onClick={changeWallet}
-                type="button"
-              >
-                <RefreshCcw size={15} />
-                Đổi ví
-              </button>
-
-              <button
-                className="btn btn-danger small-btn"
-                onClick={logoutWallet}
-                type="button"
-              >
-                <LogOut size={15} />
-                Đăng xuất
-              </button>
+        {/* Right: Wallet & Actions */}
+        <div className="og-wallet-panel">
+          <div className="og-wallet-panel__tools">
+            <ThemeToggle />
+            <div className="og-badges">
+              <span className="og-badge og-badge--primary">
+                <Landmark size={14} /> Validium
+              </span>
+              <span className="og-badge og-badge--soft">
+                <ShieldCheck size={14} /> Chain {chainId || "?"}
+              </span>
             </div>
           </div>
-        ) : (
-          <button className="btn btn-primary" onClick={connectWallet}>
-            Kết nối MetaMask
-          </button>
-        )}
+
+          {isConnected ? (
+            <div className="og-wallet-card">
+              <div className="og-wallet-card__header">
+                <div className="og-wallet-card__pill">
+                  <span className="og-status-dot"></span>
+                  <Wallet size={14} />
+                  <span className="og-address">
+                    {shortAddress(walletAddress)}
+                  </span>
+                </div>
+                <CopyButton text={walletAddress} label="Đã copy!" />
+              </div>
+
+              <div className="og-wallet-card__metrics">
+                <span className="og-metrics-label">Số dư</span>
+                <strong className="og-metrics-value">
+                  {Number(balanceNative).toFixed(4)}{" "}
+                  <span className="og-symbol">{NATIVE_SYMBOL}</span>
+                </strong>
+              </div>
+
+              <div className="og-wallet-card__actions">
+                <button
+                  className="og-btn og-btn--outline"
+                  onClick={changeWallet}
+                  type="button"
+                >
+                  <RefreshCcw size={14} /> Đổi ví
+                </button>
+                <button
+                  className="og-btn og-btn--danger"
+                  onClick={logoutWallet}
+                  type="button"
+                >
+                  <LogOut size={14} /> Đăng xuất
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button className="og-btn og-btn--primary" onClick={connectWallet}>
+              <Wallet size={18} /> Kết nối MetaMask
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );

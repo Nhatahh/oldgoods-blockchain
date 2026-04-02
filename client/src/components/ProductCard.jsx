@@ -11,58 +11,73 @@ function shortAddress(addr) {
 
 export default function ProductCard({ item }) {
   return (
-    <article className="product-card premium-card">
-      <div className="product-image-wrap">
+    <article className="og-card">
+      <div className="og-card__img-wrap">
         <img
+          className="og-card__img"
           src={
             item.imageUrl || "https://via.placeholder.com/600x400?text=OldGoods"
           }
           alt={item.title}
+          loading="lazy"
         />
-        <span className={`status-chip overlay ${item.status}`}>
+        <span className={`og-status og-status--${item.status} og-card__badge`}>
           {item.status}
         </span>
       </div>
 
-      <div className="product-card-body">
-        <div className="row-between gap-top">
-          <h3 className="product-title">{item.title}</h3>
-        </div>
+      <div className="og-card__body">
+        <h3 className="og-card__title" title={item.title}>
+          {item.title}
+        </h3>
 
-        <p className="desc line-clamp-2">{item.description}</p>
+        <p className="og-card__desc">{item.description}</p>
 
-        <div className="price-box">
-          <div>
+        {/* Khung Giá (Dùng lại của MyProductCard) */}
+        <div className="og-card__price-grid">
+          <div className="og-card__price-item">
             <small>Giá tổng</small>
             <strong>
-              {item.priceNative} {NATIVE_SYMBOL}
+              {item.priceNative}{" "}
+              <span className="og-symbol">{NATIVE_SYMBOL}</span>
             </strong>
           </div>
-          <div>
+          <div className="og-card__price-item og-card__price-item--highlight">
             <small>Đặt cọc</small>
             <strong>
-              {item.depositNative} {NATIVE_SYMBOL}
+              {item.depositNative}{" "}
+              <span className="og-symbol">{NATIVE_SYMBOL}</span>
             </strong>
           </div>
         </div>
 
-        <div className="seller-row">
-          <div className="seller-left">
-            <WalletCards size={16} />
-            <span>{shortAddress(item.sellerWallet)}</span>
+        {/* Khung Người Bán */}
+        <div className="og-card__seller-row">
+          <div className="og-card__seller-left">
+            <WalletCards size={16} className="og-text-muted" />
+            <span className="og-address-text">
+              {shortAddress(item.sellerWallet)}
+            </span>
           </div>
-          <CopyButton text={item.sellerWallet} label="Đã copy địa chỉ ví" />
+          <CopyButton text={item.sellerWallet} label="Đã copy ví người bán" />
         </div>
 
-        <div className="category-row">
-          <span className="mini-badge">{item.category || "Khác"}</span>
-          <span className="mini-proof">
+        {/* Khung Danh mục & Tem xác thực */}
+        <div className="og-card__meta-row">
+          <span className="og-mini-badge">{item.category || "Khác"}</span>
+          <span
+            className="og-mini-proof"
+            title="Hỗ trợ giao dịch qua Smart Contract"
+          >
             <BadgeCheck size={14} />
             Blockchain-ready
           </span>
         </div>
 
-        <Link className="btn btn-primary full" to={`/product/${item._id}`}>
+        <Link
+          className="og-btn og-btn--primary og-btn--full og-card__action-btn"
+          to={`/product/${item._id}`}
+        >
           Xem chi tiết
         </Link>
       </div>

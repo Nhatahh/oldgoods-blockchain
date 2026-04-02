@@ -32,8 +32,13 @@ export default function ProductDetailPage() {
   const [openRemainingModal, setOpenRemainingModal] = useState(false);
 
   const fetchProduct = async () => {
-    const res = await api.get(`/products/${id}`);
-    setProduct(res.data);
+    try {
+      const res = await api.get(`/products/${id}`);
+      setProduct(res.data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Không tải được thông tin sản phẩm");
+    }
   };
 
   const fetchTransactions = async () => {
@@ -42,14 +47,17 @@ export default function ProductDetailPage() {
       return;
     }
 
-    const res = await api.get("/transactions");
-    const mine = res.data.find(
-      (t) =>
-        t.productId?._id === id &&
-        t.buyerWallet?.toLowerCase() === walletAddress.toLowerCase(),
-    );
-
-    setMyTransaction(mine || null);
+    try {
+      const res = await api.get("/transactions");
+      const mine = res.data.find(
+        (t) =>
+          t.productId?._id === id &&
+          t.buyerWallet?.toLowerCase() === walletAddress.toLowerCase(),
+      );
+      setMyTransaction(mine || null);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -100,9 +108,7 @@ export default function ProductDetailPage() {
       console.error(err);
       toast.error(
         err?.response?.data?.message || err?.message || "Đặt cọc thất bại",
-        {
-          id: "deposit-flow",
-        },
+        { id: "deposit-flow" },
       );
     } finally {
       setLoadingDeposit(false);
@@ -150,16 +156,22 @@ export default function ProductDetailPage() {
       console.error(err);
       toast.error(
         err?.response?.data?.message || err?.message || "Thanh toán thất bại",
-        {
-          id: "remaining-flow",
-        },
+        { id: "remaining-flow" },
       );
     } finally {
       setLoadingRemaining(false);
     }
   };
 
-  if (!product) return <div className="page-card">Đang tải...</div>;
+  if (!product) {
+    return (
+      <div className="og-page-layout">
+        <div className="og-header-card og-header-card--center">
+          <p>Đang tải thông tin sản phẩm...</p>
+        </div>
+      </div>
+    );
+  }
 
   const isSeller =
     walletAddress &&
@@ -175,9 +187,10 @@ export default function ProductDetailPage() {
     myTransaction.buyerWallet.toLowerCase() === walletAddress.toLowerCase();
 
   return (
-    <>
-      <div className="detail-layout detail-layout-upgraded">
-        <div className="detail-image-card detail-premium">
+    <div className="og-page-layout">
+      <div className="og-product-detail">
+        {/* Cột trái: Hình ảnh */}
+        <div className="og-detail-image">
           <img
             src={
               product.imageUrl ||
@@ -187,95 +200,118 @@ export default function ProductDetailPage() {
           />
         </div>
 
-        <div className="detail-info-card detail-premium">
-          <span className={`status-chip ${product.status}`}>
-            {product.status}
-          </span>
-          <h1>{product.title}</h1>
-          <p className="desc">{product.description}</p>
+        {/* Cột phải: Thông tin */}
+        <div className="og-detail-info">
+          <div className="og-detail-info__header">
+            <span className={`og-status og-status--${product.status}`}>
+              {product.status}
+            </span>
+          </div>
 
-          <div className="info-grid-pro">
-            <div className="info-pro-card">
-              <small>Giá tổng</small>
-              <strong>
-                {product.priceNative} {NATIVE_SYMBOL}
+          <h1 className="og-detail-info__title">{product.title}</h1>
+          <p className="og-detail-info__desc">{product.description}</p>
+
+          {/* Block Giá */}
+          <div className="og-price-grid">
+            <div className="og-price-card">
+              <span className="og-price-label">Giá tổng</span>
+              <strong className="og-price-value">
+                {product.priceNative}{" "}
+                <span className="og-symbol">{NATIVE_SYMBOL}</span>
               </strong>
             </div>
-            <div className="info-pro-card">
-              <small>Đặt cọc</small>
-              <strong>
-                {product.depositNative} {NATIVE_SYMBOL}
+            <div className="og-price-card og-price-card--highlight">
+              <span className="og-price-label">Yêu cầu đặt cọc</span>
+              <strong className="og-price-value">
+                {product.depositNative}{" "}
+                <span className="og-symbol">{NATIVE_SYMBOL}</span>
               </strong>
             </div>
           </div>
 
-          <div className="meta-list">
-            <div>
-              <Landmark size={16} />
+          {/* Thông tin Meta */}
+          <div className="og-meta-list">
+            <div className="og-meta-item">
+              <Landmark size={18} className="og-meta-icon" />
               <span>Validium Network</span>
             </div>
-            <div>
-              <Wallet2 size={16} />
-              <span>{product.sellerWallet}</span>
-              <CopyButton
-                text={product.sellerWallet}
-                label="Đã copy ví người bán"
-              />
+            <div className="og-meta-item">
+              <Wallet2 size={18} className="og-meta-icon" />
+              <span className="og-address-text">
+                {shortHash(product.sellerWallet)}
+              </span>
+              <CopyButton text={product.sellerWallet} label="Đã copy ví" />
             </div>
-            <div>
-              <ShieldCheck size={16} />
+            <div className="og-meta-item">
+              <ShieldCheck size={18} className="og-meta-icon" />
               <span>Escrow + Hash Proof</span>
             </div>
           </div>
 
-          <div className="action-group">
+          {/* Actions */}
+          <div className="og-detail-actions">
             {canDeposit && (
               <button
-                className="btn btn-primary"
+                className="og-btn og-btn--primary og-btn--full og-btn--large"
                 onClick={() => setOpenDepositModal(true)}
                 disabled={loadingDeposit}
               >
                 {loadingDeposit
-                  ? "Đang gửi transaction..."
-                  : `Đặt cọc ${product.depositNative} ${NATIVE_SYMBOL}`}
+                  ? "Đang xử lý giao dịch..."
+                  : `Đặt cọc ngay (${product.depositNative} ${NATIVE_SYMBOL})`}
               </button>
             )}
 
             {canPayRemaining && (
               <button
-                className="btn btn-success"
+                className="og-btn og-btn--success og-btn--full og-btn--large"
                 onClick={() => setOpenRemainingModal(true)}
                 disabled={loadingRemaining}
               >
                 {loadingRemaining
-                  ? "Đang gửi transaction..."
-                  : `Thanh toán còn lại ${myTransaction.remainingNative} ${NATIVE_SYMBOL}`}
+                  ? "Đang xử lý giao dịch..."
+                  : `Thanh toán số dư (${myTransaction.remainingNative} ${NATIVE_SYMBOL})`}
               </button>
+            )}
+
+            {isSeller && (
+              <div className="og-notice-box">
+                Bạn là người đăng bán sản phẩm này.
+              </div>
+            )}
+
+            {!isConnected && (
+              <div className="og-notice-box">
+                Vui lòng kết nối ví MetaMask để giao dịch.
+              </div>
             )}
           </div>
 
+          {/* Blockchain Proof Panel (Tái sử dụng style từ MyTransactionsPage) */}
           {myTransaction && (
-            <div className="proof-panel">
-              <h3>Blockchain Proof</h3>
-
-              <div className="proof-row">
-                <span>Trạng thái</span>
-                <strong>{myTransaction.status}</strong>
+            <div className="og-tx-proofs">
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Trạng thái Escrow</span>
+                <strong
+                  className={`og-status og-status--${myTransaction.status}`}
+                >
+                  {myTransaction.status}
+                </strong>
               </div>
 
-              <div className="proof-row">
-                <span>Deposit Tx</span>
-                <div className="proof-value">
-                  <code>
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Deposit Tx</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">
                     {myTransaction.depositTxHash
                       ? shortHash(myTransaction.depositTxHash)
-                      : "chưa có"}
+                      : "Chờ xử lý"}
                   </code>
                   {myTransaction.depositTxHash && (
                     <>
                       <CopyButton
                         text={myTransaction.depositTxHash}
-                        label="Đã copy deposit tx hash"
+                        label="Đã copy"
                       />
                       <ExplorerLink txHash={myTransaction.depositTxHash} />
                     </>
@@ -283,19 +319,19 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <div className="proof-row">
-                <span>Remaining Tx</span>
-                <div className="proof-value">
-                  <code>
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Remaining Tx</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">
                     {myTransaction.remainingTxHash
                       ? shortHash(myTransaction.remainingTxHash)
-                      : "chưa có"}
+                      : "Chưa thanh toán"}
                   </code>
                   {myTransaction.remainingTxHash && (
                     <>
                       <CopyButton
                         text={myTransaction.remainingTxHash}
-                        label="Đã copy remaining tx hash"
+                        label="Đã copy"
                       />
                       <ExplorerLink txHash={myTransaction.remainingTxHash} />
                     </>
@@ -303,13 +339,15 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <div className="proof-row">
-                <span>Local Hash</span>
-                <div className="proof-value">
-                  <code>{shortHash(myTransaction.txHashLocal)}</code>
+              <div className="og-tx-proof-row">
+                <span className="og-tx-proof-label">Local Hash</span>
+                <div className="og-tx-proof-actions">
+                  <code className="og-code">
+                    {shortHash(myTransaction.txHashLocal)}
+                  </code>
                   <CopyButton
                     text={myTransaction.txHashLocal}
-                    label="Đã copy local hash"
+                    label="Đã copy"
                   />
                 </div>
               </div>
@@ -318,57 +356,76 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
+      {/* Modals Xác Nhận */}
       <ConfirmModal
         open={openDepositModal}
         title="Xác nhận đặt cọc"
-        description="Bạn sắp gửi giao dịch đặt cọc bằng MetaMask."
-        confirmText={`Đặt cọc ${product.depositNative} ${NATIVE_SYMBOL}`}
+        description="Bạn sắp gửi giao dịch đặt cọc thông qua MetaMask lên mạng Validium."
+        confirmText={`Xác nhận cọc ${product.depositNative} ${NATIVE_SYMBOL}`}
         onConfirm={handleDeposit}
         onClose={() => setOpenDepositModal(false)}
         loading={loadingDeposit}
       >
-        <div className="confirm-info-box">
-          <div>
-            <strong>Sản phẩm:</strong> {product.title}
+        <div className="og-confirm-box">
+          <div className="og-confirm-row">
+            <span>Sản phẩm:</span>
+            <strong>{product.title}</strong>
           </div>
-          <div>
-            <strong>Giá tổng:</strong> {product.priceNative} {NATIVE_SYMBOL}
+          <div className="og-confirm-row">
+            <span>Giá tổng:</span>
+            <strong>
+              {product.priceNative} {NATIVE_SYMBOL}
+            </strong>
           </div>
-          <div>
-            <strong>Đặt cọc:</strong> {product.depositNative} {NATIVE_SYMBOL}
+          <div className="og-confirm-row og-confirm-row--highlight">
+            <span>Số tiền cọc:</span>
+            <strong>
+              {product.depositNative} {NATIVE_SYMBOL}
+            </strong>
           </div>
-          <div>
-            <strong>Người bán:</strong> {product.sellerWallet}
+          <div className="og-confirm-row">
+            <span>Ví người bán:</span>
+            <span className="og-address-text">
+              {shortHash(product.sellerWallet)}
+            </span>
           </div>
         </div>
       </ConfirmModal>
 
       <ConfirmModal
         open={openRemainingModal}
-        title="Xác nhận thanh toán phần còn lại"
-        description="Bạn sắp gửi giao dịch thanh toán phần còn lại bằng MetaMask."
+        title="Thanh toán phần còn lại"
+        description="Bạn sắp thanh toán nốt số tiền còn lại để hoàn tất giao dịch."
         confirmText={`Thanh toán ${myTransaction?.remainingNative || 0} ${NATIVE_SYMBOL}`}
         onConfirm={handlePayRemaining}
         onClose={() => setOpenRemainingModal(false)}
         loading={loadingRemaining}
       >
-        <div className="confirm-info-box">
-          <div>
-            <strong>Sản phẩm:</strong> {product.title}
+        <div className="og-confirm-box">
+          <div className="og-confirm-row">
+            <span>Sản phẩm:</span>
+            <strong>{product.title}</strong>
           </div>
-          <div>
-            <strong>Đặt cọc đã trả:</strong> {myTransaction?.depositNative}{" "}
-            {NATIVE_SYMBOL}
+          <div className="og-confirm-row">
+            <span>Đã đặt cọc:</span>
+            <strong>
+              {myTransaction?.depositNative} {NATIVE_SYMBOL}
+            </strong>
           </div>
-          <div>
-            <strong>Còn lại:</strong> {myTransaction?.remainingNative}{" "}
-            {NATIVE_SYMBOL}
+          <div className="og-confirm-row og-confirm-row--highlight">
+            <span>Còn phải trả:</span>
+            <strong>
+              {myTransaction?.remainingNative} {NATIVE_SYMBOL}
+            </strong>
           </div>
-          <div>
-            <strong>Người bán:</strong> {product.sellerWallet}
+          <div className="og-confirm-row">
+            <span>Ví người bán:</span>
+            <span className="og-address-text">
+              {shortHash(product.sellerWallet)}
+            </span>
           </div>
         </div>
       </ConfirmModal>
-    </>
+    </div>
   );
 }

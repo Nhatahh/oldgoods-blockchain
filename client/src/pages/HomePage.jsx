@@ -41,27 +41,34 @@ export default function HomePage() {
   const filtered = useMemo(() => products, [products]);
 
   return (
-    <div>
-      <section className="hero">
-        <div className="hero-left">
-          <span className="badge">Web3 Marketplace Demo</span>
-          <h1>Dashboard mua bán đồ cũ nội bộ bằng MetaMask</h1>
-          <p>
-            Đăng sản phẩm off-chain trong MongoDB, đặt cọc và thanh toán trực
-            tiếp bằng ví MetaMask trên Validium. Mọi giao dịch đều gắn với
-            blockchain proof để đối chiếu tính toàn vẹn.
+    <div className="og-home">
+      {/* Hero Section */}
+      <section className="og-hero">
+        <div className="og-hero__content">
+          <span className="og-badge og-badge--primary og-hero__badge">
+            Web3 Marketplace Demo
+          </span>
+          <h1 className="og-hero__title">
+            Chợ đồ cũ nội bộ - Giao dịch an toàn qua MetaMask
+          </h1>
+          <p className="og-hero__desc">
+            Nền tảng mua bán minh bạch với cơ chế đặt cọc thông minh. Dữ liệu
+            sản phẩm được tối ưu off-chain, trong khi mọi giao dịch được bảo
+            chứng bởi Blockchain Proof trên mạng Validium.
           </p>
 
-          <div className="hero-inline-stats">
-            <div>
+          <div className="og-hero__stats">
+            <div className="og-hero__stat-item">
               <small>Hạ tầng</small>
               <strong>MongoDB + Express + React</strong>
             </div>
-            <div>
+            <div className="og-hero__stat-divider"></div>
+            <div className="og-hero__stat-item">
               <small>Mạng</small>
               <strong>Validium</strong>
             </div>
-            <div>
+            <div className="og-hero__stat-divider"></div>
+            <div className="og-hero__stat-item">
               <small>Token</small>
               <strong>{NATIVE_SYMBOL}</strong>
             </div>
@@ -69,28 +76,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <StatsBar products={products} />
-      <MiniStatsChart products={products} />
+      {/* Stats Section */}
+      <div className="og-home__stats">
+        <StatsBar products={products} />
+        <MiniStatsChart products={products} />
+      </div>
 
-      <section className="toolbar toolbar-advanced">
-        <div className="search-wrap">
-          <Search size={18} />
+      {/* Toolbar */}
+      <section className="og-toolbar">
+        <div className="og-search">
+          <Search className="og-search__icon" size={18} />
           <input
-            className="input no-border"
+            className="og-input og-search__input"
             placeholder="Tìm theo tên, mô tả, danh mục..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
         </div>
 
-        <div className="filters-wrap">
-          <div className="filter-title">
+        <div className="og-filters">
+          <div className="og-filters__label">
             <SlidersHorizontal size={16} />
             Bộ lọc
           </div>
 
           <select
-            className="input"
+            className="og-select"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -101,7 +112,7 @@ export default function HomePage() {
           </select>
 
           <select
-            className="input"
+            className="og-select"
             value={sortMode}
             onChange={(e) => setSortMode(e.target.value)}
           >
@@ -112,20 +123,23 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Product Grid */}
       {loading ? (
-        <section className="product-grid">
+        <section className="og-grid">
           <ProductCardSkeleton />
           <ProductCardSkeleton />
           <ProductCardSkeleton />
           <ProductCardSkeleton />
         </section>
       ) : filtered.length === 0 ? (
-        <EmptyState
-          title="Không có sản phẩm phù hợp"
-          desc="Hãy thử đổi bộ lọc hoặc đăng thêm sản phẩm mới."
-        />
+        <div className="og-home__empty">
+          <EmptyState
+            title="Không có sản phẩm phù hợp"
+            desc="Hãy thử đổi bộ lọc hoặc đăng thêm sản phẩm mới."
+          />
+        </div>
       ) : (
-        <section className="product-grid">
+        <section className="og-grid">
           {filtered.map((item) => (
             <ProductCard key={item._id} item={item} />
           ))}

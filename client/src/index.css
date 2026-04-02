@@ -1,1365 +1,2717 @@
+/* =========================================
+   1. KHAI BÁO BIẾN (VARIABLES)
+========================================= */
 :root {
-  --bg: #f8fafc;
-  --panel: rgba(255, 255, 255, 0.84);
-  --panel-solid: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --primary: #2563eb;
-  --primary-2: #4f46e5;
-  --success: #16a34a;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --border: #e2e8f0;
-  --radius: 24px;
-  --shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
-  --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --top-badge-bg: #dbeafe;
-  --top-badge-color: #1d4ed8;
-  --top-badge-soft-bg: #ede9fe;
-  --top-badge-soft-color: #6d28d9;
-  --wallet-pill-bg: #eff6ff;
-  --wallet-pill-border: #bfdbfe;
-  --wallet-pill-color: #1d4ed8;
-  --proof-bg: linear-gradient(180deg, #f8fafc, #eef2ff);
-  --proof-border: #dbeafe;
-  --menu-hover: #eef2ff;
-  --menu-hover-color: #312e81;
+  /* Màu nền & Kính mờ */
+  --og-body-bg: #f3f4f6;
+  --og-bg-glass: rgba(255, 255, 255, 0.85);
+  --og-card-bg: #ffffff;
+  --og-sub-bg: #f9fafb;
+  --og-input-bg: #ffffff;
+
+  /* Màu chữ */
+  --og-text-main: #111827;
+  --og-text-muted: #6b7280;
+  --og-border-color: #e5e7eb;
+
+  /* Màu thương hiệu */
+  --og-primary: #4f46e5;
+  --og-primary-hover: #4338ca;
+  --og-primary-light: #e0e7ff;
+  --og-danger: #ef4444;
+  --og-danger-hover: #dc2626;
+  --og-danger-light: #fee2e2;
+  --og-success: #10b981;
+  --og-success-light: #d1fae5;
+
+  /* Bo góc & Hiệu ứng */
+  --og-radius-md: 8px;
+  --og-radius-lg: 12px;
+  --og-radius-full: 9999px;
+  --og-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --og-shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --og-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:root[data-theme="dark"] {
-  --bg: #020617;
-  --panel: rgba(15, 23, 42, 0.82);
-  --panel-solid: #0f172a;
-  --text: #e5eefc;
-  --muted: #94a3b8;
-  --border: #23324a;
-  --shadow: 0 16px 40px rgba(2, 6, 23, 0.45);
-  --shadow-soft: 0 8px 24px rgba(2, 6, 23, 0.32);
-  --top-badge-bg: rgba(37, 99, 235, 0.18);
-  --top-badge-color: #93c5fd;
-  --top-badge-soft-bg: rgba(124, 58, 237, 0.2);
-  --top-badge-soft-color: #c4b5fd;
-  --wallet-pill-bg: rgba(37, 99, 235, 0.18);
-  --wallet-pill-border: rgba(59, 130, 246, 0.35);
-  --wallet-pill-color: #93c5fd;
-  --proof-bg: linear-gradient(180deg, #0f172a, #111827);
-  --proof-border: #23324a;
-  --menu-hover: rgba(79, 70, 229, 0.18);
-  --menu-hover-color: #c7d2fe;
+/* =========================================
+   2. DARK MODE OVERRIDES (Ghi đè biến số)
+========================================= */
+body.dark {
+  --og-body-bg: #111827;
+  --og-bg-glass: rgba(31, 41, 55, 0.85);
+  --og-card-bg: #1f2937;
+  --og-sub-bg: #111827;
+  --og-input-bg: #111827;
+
+  --og-text-main: #f9fafb;
+  --og-text-muted: #9ca3af;
+  --og-border-color: #374151;
+
+  --og-primary-light: rgba(79, 70, 229, 0.2);
+  --og-danger-light: rgba(239, 68, 68, 0.2);
+  --og-success-light: rgba(16, 185, 129, 0.2);
 }
 
-* {
+/* =========================================
+   3. ÁP DỤNG BIẾN VÀO COMPONENT (Duy thêm các class này)
+========================================= */
+
+/* Nền toàn trang */
+body {
+  background-color: var(--og-body-bg);
+  color: var(--og-text-main);
+  transition: background-color 0.3s ease;
+}
+
+/* Các loại thẻ Card & Form */
+.og-card,
+.og-header-card,
+.og-chart-card,
+.og-form-card,
+.og-modal-card,
+.og-tx-card {
+  background-color: var(--og-card-bg);
+  border: 1px solid var(--og-border-color);
+  color: var(--og-text-main);
+}
+
+/* Header & Sidebar */
+.og-header,
+.og-sidebar__inner {
+  background-color: var(--og-bg-glass);
+  border-color: var(--og-border-color);
+}
+
+/* Input, Textarea, Select */
+.og-input,
+.og-textarea,
+.og-select,
+.og-search {
+  background-color: var(--og-input-bg);
+  color: var(--og-text-main);
+  border: 1px solid var(--og-border-color);
+}
+
+/* Các khối phụ (Giá, Ví, Thông tin Proof) */
+.og-card__img-wrap,
+.og-card__price-grid,
+.og-card__seller-row,
+.og-tx-proofs,
+.og-delete-preview,
+.og-preview-box,
+.og-empty-state__icon-wrap,
+.og-notice-box {
+  background-color: var(--og-sub-bg);
+  border: 1px solid var(--og-border-color);
+}
+
+/* Progress bar & Line trong lịch sử giao dịch */
+.og-progress-line {
+  background-color: var(--og-border-color);
+}
+.og-progress-step span {
+  color: var(--og-text-muted);
+}
+
+.og-hero__stats {
+  background-color: var(--og-card-bg);
+}
+
+/* Nút Outline */
+.og-btn--outline {
+  border: 1px solid var(--og-border-color);
+  color: var(--og-text-main);
+}
+/* Đảm bảo box-sizing chuẩn cho toàn bộ app */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html,
 body {
+  max-width: 100vw;
+  overflow-x: hidden; /* Ngăn chặn scroll ngang khó chịu trên mobile */
   margin: 0;
-  color: var(--text);
-  font-family: Inter, Arial, sans-serif;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(59, 130, 246, 0.14),
-      transparent 26%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(124, 58, 237, 0.12),
-      transparent 24%
-    ),
-    linear-gradient(180deg, var(--bg), var(--bg));
+  padding: 0;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-code {
-  font-family: Consolas, monospace;
-  font-size: 12px;
-}
-
-button {
-  font-family: inherit;
-}
-
+/* --- App Layout Shell --- */
 .app-shell {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.main-container {
-  width: min(1240px, calc(100% - 24px));
-  margin: 22px auto 44px;
+.main-container.with-sidebar {
+  display: flex;
+  flex: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 1rem;
+  gap: 2rem;
+  align-items: flex-start;
 }
 
-.header {
-  width: min(1240px, calc(100% - 24px));
-  margin: 16px auto 0;
-  padding: 16px 20px;
-  border-radius: 30px;
-  background: var(--panel);
-  backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
-  box-shadow: var(--shadow);
-  display: grid;
-  grid-template-columns: 1.2fr 1fr auto;
-  gap: 18px;
-  align-items: center;
+/* Nội dung bên trong Routes (HomePage, AddProductPage...) */
+.main-container.with-sidebar > *:last-child {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive cho điện thoại */
+@media (max-width: 1024px) {
+  .main-container.with-sidebar {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* Thu nhỏ chiều cao Header trên mobile */
+  .og-header {
+    padding: 0.5rem 0;
+  }
+
+  .og-header__container {
+    gap: 0.5rem; /* Giảm khoảng cách giữa các khối */
+    padding: 0 0.75rem;
+  }
+
+  /* 1. Ẩn menu điều hướng trên Header (Vì đã có Sidebar/Workspace bên dưới rồi) */
+  /* Việc này giúp giải phóng rất nhiều không gian */
+  .og-header .og-nav {
+    display: none;
+  }
+
+  /* 2. Rút gọn phần Brand/Logo */
+  .og-brand__text {
+    display: none; /* Chỉ để lại Icon Logo OG cho gọn */
+  }
+
+  /* 3. Rút gọn Badge mạng lưới */
+  .og-badge {
+    padding: 4px 6px;
+  }
+  .og-badge span,
+  .og-badge--soft {
+    display: none; /* Ẩn bớt cái badge "Chain ID" và chữ trong badge chính */
+  }
+  .og-badge svg {
+    margin: 0;
+  }
+
+  /* 4. Tối ưu Wallet Card (Quan trọng nhất) */
+  .og-wallet-card {
+    padding: 4px 8px;
+    gap: 0.5rem;
+  }
+
+  /* Ẩn phần số dư và các nút đổi ví/đăng xuất trên mobile để tránh tràn */
+  /* Người dùng có thể thực hiện các thao tác này ở trang cá nhân hoặc Sidebar */
+  .og-wallet-card__metrics,
+  .og-wallet-card__actions {
+    display: none;
+  }
+
+  .og-wallet-panel__tools {
+    gap: 0.5rem;
+  }
+
+  /* Rút gọn nút Theme Toggle */
+  .og-theme-btn__text {
+    display: none;
+  }
+  .og-theme-btn {
+    padding: 6px;
+  }
+
+  /* 5. Nút kết nối MetaMask ban đầu */
+  .og-btn--primary {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  .og-btn--primary svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Xử lý riêng cho màn hình cực nhỏ < 400px */
+@media (max-width: 400px) {
+  .og-badges {
+    display: none; /* Ẩn luôn badge mạng nếu quá chật */
+  }
+}
+
+/* Base Header (Glassmorphism) */
+.og-header {
   position: sticky;
-  top: 12px;
-  z-index: 20;
+  top: 0;
+  z-index: 50;
+  background: var(--og-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--og-border-color);
+  box-shadow: var(--og-shadow-sm);
+  padding: 0.75rem 0;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-logo {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border-radius: 18px;
-  color: white;
-  font-weight: 800;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
-  box-shadow: 0 10px 28px rgba(79, 70, 229, 0.28);
-}
-
-.brand h2 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.brand p {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.menu {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.menu a {
-  padding: 10px 14px;
-  border-radius: 12px;
-  transition: 0.2s ease;
-}
-
-.menu a:hover,
-.active-link {
-  background: var(--menu-hover);
-  color: var(--menu-hover-color);
-}
-
-.wallet-panel {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.network-badges {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.top-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 999px;
-  padding: 7px 10px;
-  background: var(--top-badge-bg);
-  color: var(--top-badge-color);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.top-badge.soft {
-  background: var(--top-badge-soft-bg);
-  color: var(--top-badge-soft-color);
-}
-
-.wallet-box-advanced {
-  background: var(--panel-solid);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 12px;
-  min-width: 220px;
-  box-shadow: var(--shadow-soft);
-}
-
-.wallet-box-top {
+.og-header__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 2rem;
 }
 
-.wallet-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  padding: 10px 14px;
-  background: var(--wallet-pill-bg);
-  border: 1px solid var(--wallet-pill-border);
-  color: var(--wallet-pill-color);
-  font-weight: 700;
-}
-
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #22c55e;
-}
-
-.wallet-metrics {
-  margin-top: 10px;
-}
-
-.wallet-metrics small {
-  display: block;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-
-.wallet-metrics strong {
-  font-size: 15px;
-}
-
-.hero {
-  padding: 46px;
-  border-radius: 34px;
-  color: white;
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(255, 255, 255, 0.12),
-      transparent 25%
-    ),
-    linear-gradient(135deg, #0f172a, #1d4ed8);
-  box-shadow: var(--shadow);
-}
-
-.badge {
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 13px;
-}
-
-.hero h1 {
-  margin: 14px 0 10px;
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: 1.08;
-  max-width: 780px;
-}
-
-.hero p {
-  margin: 0;
-  max-width: 840px;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.7;
-}
-
-.hero-inline-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 22px;
-}
-
-.hero-inline-stats > div {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 14px;
-}
-
-.hero-inline-stats small {
-  display: block;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 4px;
-}
-
-.hero-inline-stats strong {
-  font-size: 15px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin: 22px 0;
-}
-
-.stat-card {
+/* Brand / Logo */
+.og-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 18px;
-  box-shadow: var(--shadow-soft);
+  text-decoration: none;
 }
 
-.stat-card p {
-  margin: 0 0 4px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.stat-card h3 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.stat-icon {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
+.og-brand__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--og-primary), #8b5cf6);
   color: white;
-}
-
-.stat-icon.blue {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-}
-.stat-icon.purple {
-  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-}
-.stat-icon.orange {
-  background: linear-gradient(135deg, #f59e0b, #f97316);
-}
-.stat-icon.green {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-}
-
-.toolbar {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 14px;
-  margin: 22px 0;
-}
-
-.toolbar-advanced {
-  align-items: stretch;
-}
-
-.search-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
-  padding: 0 14px;
-  box-shadow: var(--shadow-soft);
-}
-
-.filters-wrap {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 12px;
-  box-shadow: var(--shadow-soft);
-}
-
-.filter-title {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.input {
-  width: 100%;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
-  color: var(--text);
-  padding: 14px 16px;
-  outline: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-}
-
-.no-border {
-  border: none !important;
-}
-
-.no-shadow {
-  box-shadow: none !important;
-}
-
-.btn {
-  border: none;
-  border-radius: 16px;
-  padding: 12px 18px;
-  cursor: pointer;
   font-weight: 800;
-  transition:
-    transform 0.18s ease,
-    opacity 0.18s ease;
+  font-size: 1.1rem;
+  border-radius: var(--og-radius-md);
+  box-shadow: var(--og-shadow-sm);
 }
 
-.btn:hover {
+.og-brand__text h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+  line-height: 1.2;
+}
+
+.og-brand__text p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--og-text-muted);
+  font-weight: 500;
+}
+
+/* Navigation */
+.og-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: var(--og-radius-full);
+}
+
+.og-nav__link {
+  text-decoration: none;
+  color: var(--og-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--og-radius-full);
+  transition: var(--og-transition);
+}
+
+.og-nav__link:hover {
+  color: var(--og-text-main);
+}
+
+.og-nav__link:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: 2px;
+}
+
+.og-nav__link--active {
+  background: white;
+  color: var(--og-primary);
+  box-shadow: var(--og-shadow-sm);
+}
+
+/* Wallet Panel */
+.og-wallet-panel {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.og-wallet-panel__tools {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Badges */
+.og-badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.og-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--og-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.og-badge--primary {
+  background: var(--og-primary-light);
+  color: var(--og-primary);
+}
+
+.og-badge--soft {
+  background: #f3f4f6;
+  color: var(--og-text-muted);
+  border-color: var(--og-border-color);
+}
+
+/* Wallet Card (Advanced Info) */
+.og-wallet-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  border: 1px solid var(--og-border-color);
+  padding: 6px 6px 6px 12px;
+  border-radius: var(--og-radius-full);
+  box-shadow: var(--og-shadow-sm);
+}
+
+.og-wallet-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.og-wallet-card__pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--og-text-main);
+}
+
+.og-status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--og-success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--og-success-light);
+}
+
+.og-address {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.og-wallet-card__metrics {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid var(--og-border-color);
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+}
+
+.og-metrics-label {
+  font-size: 0.65rem;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.og-metrics-value {
+  font-size: 0.9rem;
+  color: var(--og-text-main);
+}
+
+.og-symbol {
+  color: var(--og-primary);
+  font-size: 0.8rem;
+}
+
+.og-wallet-card__actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Buttons */
+.og-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  transition: var(--og-transition);
+  border-radius: var(--og-radius-full);
+}
+
+.og-btn:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: 2px;
+}
+
+.og-btn--primary {
+  background: var(--og-primary);
+  color: white;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  box-shadow: var(--og-shadow-md);
+}
+
+.og-btn--primary:hover {
+  background: var(--og-primary-hover);
   transform: translateY(-1px);
 }
 
-.btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
+.og-btn--outline {
+  background: transparent;
+  color: var(--og-text-main);
+  border: 1px solid var(--og-border-color);
+  padding: 6px 12px;
+  font-size: 0.8rem;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
+.og-btn--outline:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.og-btn--danger {
+  background: var(--og-danger-light);
+  color: var(--og-danger);
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.og-btn--danger:hover {
+  background: var(--og-danger);
   color: white;
 }
 
-.btn-success {
-  background: linear-gradient(135deg, #16a34a, #15803d);
-  color: white;
+/* Responsive cơ bản */
+@media (max-width: 1024px) {
+  .og-wallet-card__metrics {
+    display: none;
+  }
 }
 
-.btn-outline {
-  background: var(--panel-solid);
-  border: 1px solid var(--border);
-  color: var(--text);
+/* =========================================
+   OLDGOODS WEB3 HOMEPAGE STYLES
+   Prefix: og-
+========================================= */
+
+.og-home {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.small-btn {
-  width: 100%;
-  margin-top: 10px;
+/* --- Hero Section --- */
+.og-hero {
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 3rem 2rem;
+  box-shadow: var(--og-shadow-sm);
+  position: relative;
+  overflow: hidden;
 }
 
-.icon-btn {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
-  color: var(--text);
-  cursor: pointer;
+/* Tạo hiệu ứng mờ ảo góc cho Hero */
+.og-hero::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: var(--og-primary-light);
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: 0;
+  opacity: 0.6;
 }
 
-.theme-toggle-btn {
+.og-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.og-hero__badge {
+  display: inline-flex;
+  margin-bottom: 1rem;
+}
+
+.og-hero__title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--og-text-main);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.og-hero__desc {
+  font-size: 1.05rem;
+  color: var(--og-text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 90%;
+}
+
+/* Inline Stats trong Hero */
+.og-hero__stats {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 40px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
-  color: var(--text);
-  padding: 0 14px;
-  font-weight: 700;
-  cursor: pointer;
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.75rem 1.25rem;
+  box-shadow: var(--og-shadow-sm);
+  gap: 1.25rem;
 }
 
-.explorer-link {
-  display: inline-flex;
+.og-hero__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.og-hero__stat-item small {
+  font-size: 0.7rem;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.og-hero__stat-item strong {
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.og-hero__stat-divider {
+  width: 1px;
+  height: 30px;
+  background-color: var(--og-border-color);
+}
+
+/* --- Stats & Charts Wrapper --- */
+.og-home__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Toolbar (Search & Filters) --- */
+.og-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 1rem;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  box-shadow: var(--og-shadow-sm);
+  gap: 1rem;
+}
+
+/* Khối Search */
+.og-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 280px;
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.5rem 1rem;
+  transition: var(--og-transition);
+}
+
+.og-search:focus-within {
+  background: white;
+  border-color: var(--og-primary);
+  box-shadow: 0 0 0 3px var(--og-primary-light);
+}
+
+.og-search__icon {
+  color: var(--og-text-muted);
+  margin-right: 0.5rem;
+}
+
+.og-search__input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+  outline: none;
+}
+
+.og-search__input::placeholder {
+  color: #9ca3af;
+}
+
+/* Khối Filters */
+.og-filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.og-filters__label {
+  display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: #3b82f6;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
 }
 
-.full {
-  width: 100%;
+/* Input / Select dùng chung */
+.og-select {
+  appearance: none; /* Xóa style mặc định của trình duyệt */
+  background-color: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--og-text-main);
+  cursor: pointer;
+  outline: none;
+  transition: var(--og-transition);
+  /* Mũi tên custom cho select */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
 }
 
-.product-grid {
+.og-select:hover {
+  border-color: #d1d5db;
+}
+
+.og-select:focus-visible {
+  border-color: var(--og-primary);
+  box-shadow: 0 0 0 3px var(--og-primary-light);
+}
+
+/* --- Product Grid --- */
+.og-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-.product-card,
-.page-card,
-.detail-image-card,
-.detail-info-card,
-.tx-item {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.og-home__empty {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+/* Responsive Home */
+@media (max-width: 768px) {
+  .og-hero {
+    padding: 2rem 1.5rem;
+  }
+
+  .og-hero__title {
+    font-size: 1.5rem;
+  }
+
+  .og-hero__stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .og-hero__stat-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .og-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .og-filters {
+    justify-content: space-between;
+  }
+
+  .og-select {
+    flex: 1;
+  }
+}
+
+/* =========================================
+   OLDGOODS WEB3 ADD PRODUCT STYLES
+   Prefix: og-
+========================================= */
+
+.og-page-wrapper {
+  margin: 0 auto;
+}
+
+.og-form-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  box-shadow: var(--og-shadow-md);
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
 }
 
-.premium-card {
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+/* Header Form */
+.og-form-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--og-border-color);
 }
 
-.premium-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow);
+.og-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--og-primary-light);
+  color: var(--og-primary);
+  border-radius: var(--og-radius-md);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 }
 
-.product-image-wrap {
-  position: relative;
+.og-form-card__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--og-text-main);
 }
 
-.product-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-}
-
-.overlay {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-}
-
-.product-card-body {
-  padding: 16px;
-}
-
-.gap-top {
-  margin-bottom: 8px;
-}
-
-.product-title {
+.og-form-card__desc {
   margin: 0;
-  font-size: 18px;
+  font-size: 0.95rem;
+  color: var(--og-text-muted);
 }
 
-.row-between {
+/* Khung Form */
+.og-form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.og-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.og-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.og-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--og-text-main);
+}
+
+/* Input chung */
+.og-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+  transition: var(--og-transition);
+  font-family: inherit;
+}
+
+.og-input::placeholder {
+  color: #9ca3af;
+}
+
+.og-input:hover {
+  border-color: #d1d5db;
+}
+
+.og-input:focus {
+  outline: none;
+  border-color: var(--og-primary);
+  box-shadow: 0 0 0 3px var(--og-primary-light);
+}
+
+/* Nút cuộn cho input number */
+.og-input[type="number"]::-webkit-inner-spin-button,
+.og-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Textarea */
+.og-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Input có icon bên trong */
+.og-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.og-input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #9ca3af;
+  pointer-events: none; /* Tránh cản trở khi click chuột */
+}
+
+.og-input--with-icon {
+  padding-left: 2.75rem;
+}
+
+.og-input--with-icon:focus + .og-input-icon {
+  color: var(--og-primary);
+}
+
+/* Image Preview */
+.og-preview-box {
+  width: 100%;
+  border: 2px dashed var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  background: #f9fafb;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.og-preview-image {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.og-preview-error {
+  padding: 2rem;
+  color: var(--og-danger);
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: var(--og-danger-light);
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Actions */
+.og-form__actions {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--og-border-color);
+}
+
+.og-btn--full {
+  width: 100%;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+}
+
+.og-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Form */
+@media (max-width: 640px) {
+  .og-form__row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .og-form-card__header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .og-form {
+    padding: 1.5rem;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 STANDARD PAGE STYLES
+   Prefix: og-
+========================================= */
+
+/* Layout chuẩn cho các trang danh sách/quản lý */
+.og-page-layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header Card (Khối tiêu đề trang) */
+.og-header-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 2rem;
+  box-shadow: var(--og-shadow-sm);
+}
+
+.og-header-card--center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  text-align: center;
+}
+
+.og-header-card__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--og-text-main);
+  letter-spacing: -0.02em;
+}
+
+.og-header-card__desc {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--og-text-muted);
+  line-height: 1.5;
+}
+
+/* Lưu ý: .og-grid đã được khai báo ở phần HomePage.
+  Nó sẽ tự động áp dụng cho phần danh sách sản phẩm ở trang này.
+*/
+
+/* Responsive */
+@media (max-width: 640px) {
+  .og-page-layout {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .og-header-card {
+    padding: 1.5rem;
+  }
+
+  .og-header-card__title {
+    font-size: 1.5rem;
+  }
+}
+
+/* =========================================
+   OLDGOODS WEB3 TRANSACTIONS STYLES
+   Prefix: og-
+========================================= */
+
+.og-tx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.og-tx-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--og-shadow-sm);
+  transition: var(--og-transition);
+}
+
+.og-tx-card:hover {
+  box-shadow: var(--og-shadow-md);
+  border-color: #d1d5db;
+}
+
+/* Header Tx */
+.og-tx-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--og-border-color);
+  gap: 1rem;
+}
+
+.og-tx-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.og-tx-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--og-primary);
+  text-decoration: none;
+  transition: var(--og-transition);
+}
+
+.og-tx-title:hover {
+  color: var(--og-primary-hover);
+  text-decoration: underline;
+}
+
+.og-tx-title--text {
+  color: var(--og-text-main);
+  text-decoration: none;
+}
+
+.og-tx-title--text:hover {
+  color: var(--og-text-main);
+  text-decoration: none;
+}
+
+.og-tx-category {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--og-text-muted);
+}
+
+/* Status Badges */
+.og-status {
+  padding: 4px 12px;
+  border-radius: var(--og-radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #f3f4f6;
+  color: var(--og-text-muted);
+}
+
+/* Tùy chỉnh màu sắc dựa trên status (Có thể thêm/sửa tùy theo data trả về) */
+.og-status--available {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.og-status--reserved {
+  background: #fef08a;
+  color: #854d0e;
+}
+
+.og-status--completed {
+  background: var(--og-success-light);
+  color: #047857;
+}
+
+.og-status--cancelled {
+  background: var(--og-danger-light);
+  color: var(--og-danger);
+}
+
+/* Tx Details Grid */
+.og-tx-card__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.og-tx-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.og-tx-detail-item small {
+  font-size: 0.75rem;
+  color: var(--og-text-muted);
+  font-weight: 500;
+}
+
+.og-tx-detail-item strong {
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+}
+
+.og-address-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.og-text-success {
+  color: var(--og-success) !important;
+}
+.og-text-danger {
+  color: var(--og-danger) !important;
+}
+
+/* Proof Panel */
+.og-tx-proofs {
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.og-tx-proof-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.desc {
-  color: var(--muted);
-  line-height: 1.65;
+.og-tx-proof-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
+  min-width: 100px;
 }
 
-.line-clamp-2 {
+.og-tx-proof-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.og-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  background: #e5e7eb;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #374151;
+}
+
+/* Responsive Giao Dịch */
+@media (max-width: 640px) {
+  .og-tx-card__top {
+    flex-direction: column;
+  }
+
+  .og-tx-proof-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .og-tx-proof-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 PRODUCT DETAIL STYLES
+   Prefix: og-
+========================================= */
+
+.og-product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--og-shadow-sm);
+}
+
+/* Cột trái: Ảnh sản phẩm */
+.og-detail-image {
+  background: #f9fafb;
+  border-radius: var(--og-radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--og-border-color);
+}
+
+.og-detail-image img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+/* Cột phải: Thông tin */
+.og-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.og-detail-info__header {
+  display: flex;
+  align-items: center;
+}
+
+.og-detail-info__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--og-text-main);
+  line-height: 1.2;
+}
+
+.og-detail-info__desc {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--og-text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap; /* Giữ định dạng xuống dòng nếu có */
+}
+
+/* Khối hiển thị Giá */
+.og-price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.og-price-card {
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.og-price-card--highlight {
+  background: var(--og-primary-light);
+  border-color: var(--og-primary);
+}
+
+.og-price-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.og-price-card--highlight .og-price-label {
+  color: var(--og-primary);
+}
+
+.og-price-value {
+  font-size: 1.5rem;
+  color: var(--og-text-main);
+  font-weight: 800;
+}
+
+.og-price-card--highlight .og-price-value {
+  color: var(--og-primary);
+}
+
+/* Danh sách Meta (Network, Wallet, Escrow) */
+.og-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px dashed var(--og-border-color);
+  border-bottom: 1px dashed var(--og-border-color);
+}
+
+.og-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+  font-weight: 500;
+}
+
+.og-meta-icon {
+  color: var(--og-text-muted);
+}
+
+/* Actions & Buttons */
+.og-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.og-btn--large {
+  padding: 1rem 1.5rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.og-btn--success {
+  background: var(--og-success);
+  color: white;
+  box-shadow: var(--og-shadow-md);
+}
+
+.og-btn--success:hover:not(:disabled) {
+  background: #059669; /* Đậm hơn màu success một chút */
+  transform: translateY(-1px);
+}
+
+.og-notice-box {
+  background: #f3f4f6;
+  color: var(--og-text-muted);
+  padding: 1rem;
+  border-radius: var(--og-radius-md);
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Styles cho nội dung bên trong Modal Confirm */
+.og-confirm-box {
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.og-confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.og-confirm-row span:first-child {
+  color: var(--og-text-muted);
+}
+
+.og-confirm-row strong,
+.og-confirm-row .og-address-text {
+  color: var(--og-text-main);
+}
+
+.og-confirm-row--highlight {
+  border-top: 1px dashed var(--og-border-color);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.og-confirm-row--highlight strong {
+  color: var(--og-primary);
+  font-size: 1.1rem;
+}
+
+/* Responsive Chi Tiết Sản Phẩm */
+@media (max-width: 860px) {
+  .og-product-detail {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .og-detail-image img {
+    max-height: 400px;
+  }
+
+  .og-detail-info__title {
+    font-size: 1.5rem;
+  }
+
+  .og-price-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   OLDGOODS WEB3 TIMELINE STYLES
+   Prefix: og-
+========================================= */
+
+.og-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin: 1.5rem 0 2rem 0;
+  padding: 0 1rem;
+}
+
+/* Đường kẻ ngang kết nối các node */
+.og-timeline::before {
+  content: "";
+  position: absolute;
+  top: 16px; /* Giữa icon 32px */
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background: var(--og-border-color);
+  z-index: 0;
+}
+
+.og-timeline-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 80px;
+}
+
+.og-timeline-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: white; /* Đè lên đường kẻ */
+  border: 2px solid var(--og-border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9ca3af;
+  transition: var(--og-transition);
+}
+
+.og-timeline-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
+  text-align: center;
+  background: white; /* Tùy chọn nếu muốn che đường kẻ rớt xuống */
+}
+
+/* Trạng thái đã hoàn thành (Done) */
+.og-timeline-step--done .og-timeline-icon {
+  background: var(--og-primary-light);
+  border-color: var(--og-primary);
+  color: var(--og-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); /* Glow nhẹ */
+}
+
+.og-timeline-step--done .og-timeline-text {
+  color: var(--og-text-main);
+}
+
+/* Khu vực nút Verify */
+.og-tx-card__actions {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--og-border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive Timeline */
+@media (max-width: 640px) {
+  .og-timeline {
+    padding: 0;
+  }
+  .og-timeline::before {
+    left: 1rem;
+    right: 1rem;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 MODAL STYLES
+   Prefix: og-
+========================================= */
+
+.og-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: og-fade-in 0.2s ease-out;
+}
+
+.og-modal-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  width: 100%;
+  min-width: 500px;
+  box-shadow:
+    var(--og-shadow-md),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  animation: og-scale-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.og-modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--og-border-color);
+  background: #f9fafb;
+}
+
+.og-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+  line-height: 1.4;
+}
+
+.og-modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.og-modal-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--og-text-muted);
+  line-height: 1.5;
+}
+
+.og-modal-actions {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--og-border-color);
+  background: #f9fafb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Keyframes cho Modal Animation */
+@keyframes og-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes og-scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive Modal */
+@media (max-width: 640px) {
+  .og-modal-overlay {
+    padding: 1rem;
+    align-items: flex-end; /* Hiển thị dưới cùng trên điện thoại */
+  }
+
+  .og-modal-card {
+    animation: og-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .og-modal-actions {
+    flex-direction: column;
+  }
+
+  .og-modal-actions .og-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .og-modal-actions .og-btn--outline {
+    order: 2; /* Đẩy nút Hủy xuống dưới */
+  }
+
+  .og-modal-actions .og-btn--primary {
+    order: 1; /* Nút hành động chính ở trên */
+  }
+}
+
+@keyframes og-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 ICON BUTTON STYLES
+   Prefix: og-
+========================================= */
+
+.og-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--og-text-muted);
+  padding: 4px;
+  border-radius: var(--og-radius-md);
+  cursor: pointer;
+  transition: var(--og-transition);
+  /* Tránh co nút khi nằm trong các flexbox hẹp */
+  flex-shrink: 0;
+}
+
+.og-icon-btn:hover {
+  background: #f3f4f6; /* Nền xám nhạt khi lướt qua */
+  color: var(--og-primary); /* Đổi màu icon sang màu chính */
+  border-color: var(--og-border-color);
+}
+
+.og-icon-btn:active {
+  transform: scale(0.95); /* Hiệu ứng lún xuống khi click */
+}
+
+.og-icon-btn:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: 2px;
+  background: white;
+}
+/* =========================================
+   OLDGOODS WEB3 DELETE MODAL STYLES
+   Prefix: og-
+========================================= */
+
+/* Header Cảnh báo */
+.og-modal-header--danger {
+  display: flex;
+  align-items: flex-start; /* Cho icon lên trên cùng hàng với title */
+  gap: 1rem;
+  background: white; /* Bỏ nền xám của header mặc định */
+}
+
+.og-danger-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--og-danger-light);
+  color: var(--og-danger);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.og-text-danger {
+  color: var(--og-danger) !important;
+}
+
+/* Khối Preview Sản Phẩm bị xóa */
+.og-delete-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 1rem;
+}
+
+.og-delete-preview__image {
+  width: 100%;
+  height: 140px;
+  border-radius: var(--og-radius-md);
+  overflow: hidden;
+  background: white;
+  border: 1px solid var(--og-border-color);
+}
+
+.og-delete-preview__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Không cắt mất hình */
+}
+
+.og-delete-preview__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.og-delete-preview__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+}
+
+.og-delete-preview__desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--og-text-muted);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 2; /* Cắt chữ sau 2 dòng */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.price-box {
+/* Grid thông tin nhỏ */
+.og-delete-preview__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 16px 0;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--og-border-color);
 }
 
-.price-box > div {
-  background: color-mix(in srgb, var(--panel-solid) 90%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.price-box small {
-  display: block;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-
-.price-box strong {
-  font-size: 18px;
-}
-
-.seller-row {
+.og-preview-stat {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.seller-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text);
-  font-size: 14px;
-}
-
-.category-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.mini-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.12);
-  color: #3b82f6;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.mini-proof {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.status-chip {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 800;
+.og-preview-stat small {
+  font-size: 0.7rem;
+  color: var(--og-text-muted);
   text-transform: uppercase;
 }
 
-.status-chip.available {
-  background: #dcfce7;
-  color: #166534;
+.og-preview-stat strong {
+  font-size: 0.85rem;
+  color: var(--og-text-main);
 }
 
-.status-chip.reserved,
-.status-chip.deposited {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-chip.completed {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.page-card {
-  padding: 24px;
-}
-
-.page-top-row {
+/* Hộp ghi chú nguy hiểm */
+.og-notice-box--danger {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 0.75rem;
+  background: #fef2f2; /* Nền đỏ cực nhạt */
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  text-align: left;
 }
 
-.subtle-text {
-  color: var(--muted);
-  margin: 6px 0 0;
-}
+/* Responsive Modal Delete */
+@media (min-width: 640px) {
+  /* Màn hình lớn thì đẩy ảnh sang bên trái */
+  .og-delete-preview {
+    flex-direction: row;
+    align-items: center;
+  }
 
-.form-page-wrap {
+  .og-delete-preview__image {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 MODAL FORM STYLES
+   Prefix: og-
+========================================= */
+
+.og-modal-form {
   display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.og-modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Ghi đè chiều cao textarea trong modal cho gọn hơn */
+.og-modal-form .og-textarea {
+  min-height: 80px;
+}
+
+/* Responsive Modal Form */
+@media (max-width: 480px) {
+  .og-modal-row {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 EMPTY STATE STYLES
+   Prefix: og-
+========================================= */
+
+.og-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-}
-
-.form-card-premium {
-  width: min(860px, 100%);
-}
-
-.form-page-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.form-page-header h1 {
-  margin: 0;
-}
-
-.form-page-header p {
-  margin: 6px 0 0;
-  color: var(--muted);
-}
-
-.form-icon-badge {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 16px;
-  color: white;
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.input-with-icon {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--panel-solid);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 0 14px;
-}
-
-.full-span {
-  grid-column: 1 / -1;
-}
-
-.detail-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 18px;
-}
-
-.detail-layout-upgraded {
-  align-items: start;
-}
-
-.detail-premium {
-  box-shadow: var(--shadow);
-}
-
-.detail-image-card,
-.detail-info-card {
-  padding: 20px;
-}
-
-.detail-image-card img {
-  width: 100%;
-  border-radius: 18px;
-  display: block;
-}
-
-.info-grid-pro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 18px 0;
-}
-
-.info-pro-card {
-  background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 14px;
-}
-
-.info-pro-card small {
-  display: block;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-
-.info-pro-card strong {
-  font-size: 20px;
-}
-
-.meta-list {
-  display: grid;
-  gap: 12px;
-  margin: 18px 0;
-}
-
-.meta-list > div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text);
-  overflow-wrap: anywhere;
-}
-
-.action-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.proof-panel {
-  margin-top: 20px;
-  padding: 18px;
-  border-radius: 18px;
-  background: var(--proof-bg);
-  border: 1px solid var(--proof-border);
-}
-
-.proof-panel h3 {
-  margin-top: 0;
-}
-
-.proof-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px dashed var(--border);
-}
-
-.proof-row:last-child {
-  border-bottom: none;
-}
-
-.proof-value {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 60%;
-  justify-content: flex-end;
-}
-
-.proof-value code {
-  overflow-wrap: anywhere;
-}
-
-.tx-list {
-  display: grid;
-  gap: 16px;
-}
-
-.upgraded-tx-list {
-  gap: 18px;
-}
-
-.tx-item {
-  padding: 18px;
-}
-
-.tx-item-advanced {
-  box-shadow: var(--shadow-soft);
-}
-
-.tx-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.tx-timeline {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 16px 0;
-}
-
-.timeline-node {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 14px;
-  padding: 10px 12px;
-  background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.timeline-node.done {
-  background: #dcfce7;
-  color: #166534;
-  border-color: #bbf7d0;
-}
-
-.tx-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 14px;
-  margin-bottom: 14px;
-}
-
-.proof-panel-list {
-  margin-bottom: 14px;
-}
-
-.empty-state {
   text-align: center;
-  padding: 56px 20px;
-  color: var(--muted);
+  padding: 3rem 1.5rem;
+  width: 100%;
 }
 
-.empty-state h3 {
-  color: var(--text);
-  margin-bottom: 10px;
+.og-empty-state__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: #f3f4f6; /* Nền xám nhạt */
+  color: #9ca3af; /* Icon màu xám */
+  border-radius: 50%;
+  margin-bottom: 1.25rem;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 }
 
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--panel-solid) 75%, #94a3b8);
-  border-radius: 12px;
+.og-empty-state__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--og-text-main);
 }
 
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.45),
-    transparent
-  );
-  animation: shimmer 1.2s infinite;
+.og-empty-state__desc {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--og-text-muted);
+  max-width: 400px;
+  line-height: 1.5;
 }
+/* =========================================
+   OLDGOODS WEB3 EXPLORER LINK STYLES
+   Prefix: og-
+========================================= */
 
-.skeleton-image {
-  height: 220px;
-}
-
-.skeleton-line {
-  height: 16px;
-  margin-bottom: 10px;
-}
-
-.skeleton-line.short {
-  width: 55%;
-}
-
-.skeleton-box-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  height: 56px;
-  margin: 14px 0;
+.og-explorer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--og-primary);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: var(--og-transition);
   background: transparent;
 }
 
-.skeleton-box {
-  height: 56px;
-}
-
-.skeleton-btn {
-  height: 44px;
-}
-
-.skeleton-card {
-  pointer-events: none;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.58);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  z-index: 999;
-}
-
-.modal-card {
-  width: min(520px, 100%);
-  background: var(--panel-solid);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.modal-header {
-  padding: 20px 20px 0;
-}
-
-.modal-header h3 {
-  margin: 0;
-}
-
-.modal-body {
-  padding: 16px 20px;
-}
-
-.modal-body p {
-  color: var(--muted);
-  margin-top: 0;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 0 20px 20px;
-}
-
-.confirm-info-box {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
-  border: 1px solid var(--border);
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@media (max-width: 980px) {
-  .header,
-  .toolbar,
-  .detail-layout,
-  .form-grid,
-  .tx-grid,
-  .stats-grid,
-  .hero-inline-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .wallet-panel,
-  .menu {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .filters-wrap {
-    grid-template-columns: 1fr;
-  }
-
-  .tx-timeline {
-    grid-template-columns: 1fr;
-  }
-
-  .proof-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .proof-value {
-    max-width: 100%;
-    justify-content: flex-start;
-  }
-
-  .modal-actions {
-    flex-direction: column-reverse;
-  }
-}
-
-.with-sidebar {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.content-area {
-  min-width: 0;
-}
-
-.sidebar {
-  position: sticky;
-  top: 110px;
-}
-
-.sidebar-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 18px;
-  box-shadow: var(--shadow-soft);
-}
-
-.sidebar-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--muted);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.sidebar-nav {
-  display: grid;
-  gap: 8px;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  color: var(--text);
-  font-weight: 700;
-  transition: 0.18s ease;
-}
-
-.sidebar-link:hover {
-  background: var(--menu-hover);
-  color: var(--menu-hover-color);
-}
-
-.sidebar-link-active {
-  background: linear-gradient(
-    135deg,
-    rgba(37, 99, 235, 0.14),
-    rgba(79, 70, 229, 0.14)
-  );
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.22);
-}
-
-.mini-chart-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 18px;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 18px;
-}
-
-.mini-chart-head h3 {
-  margin: 0 0 6px;
-}
-
-.mini-chart-head p {
-  margin: 0;
-  color: var(--muted);
-}
-
-.mini-chart-wrap {
-  width: 100%;
-  height: 220px;
-  margin-top: 12px;
-}
-
-@media (max-width: 1100px) {
-  .with-sidebar {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    position: static;
-  }
-}
-
-.my-product-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.btn-danger {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border: none;
-  border-radius: 16px;
-  padding: 12px 18px;
-  cursor: pointer;
-  font-weight: 800;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.small-note {
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.edit-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.edit-full-span {
-  grid-column: 1 / -1;
-}
-
-.preview-box {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 12px;
-  background: var(--panel-solid);
-}
-
-.preview-image {
-  width: 100%;
-  max-height: 320px;
-  object-fit: cover;
-  border-radius: 14px;
-  display: block;
-}
-
-.preview-error {
-  padding: 20px;
-  text-align: center;
-  color: #ef4444;
-  font-weight: 600;
-}
-
-@media (max-width: 980px) {
-  .edit-form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.danger-modal {
-  border: 1px solid rgba(239, 68, 68, 0.28);
-}
-
-.danger-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px 20px 0;
-}
-
-.danger-icon-wrap {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  color: white;
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  flex-shrink: 0;
-}
-
-.modal-subtle {
-  margin-top: 4px;
-}
-
-.delete-product-box {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 14px;
-  margin-top: 8px;
-}
-
-.delete-product-image img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 14px;
-  display: block;
-}
-
-.delete-product-info h4 {
-  margin: 0 0 8px;
-  font-size: 18px;
-}
-
-.delete-product-info p {
-  margin: 0 0 12px;
-  color: var(--muted);
-}
-
-.delete-meta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.delete-meta-grid > div {
-  background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 10px 12px;
-}
-
-.delete-meta-grid small {
-  display: block;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-
-.delete-meta-grid strong {
-  font-size: 14px;
-}
-
-.danger-note {
-  margin-top: 16px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.18);
-  color: #ef4444;
-  font-size: 14px;
-}
-
-@media (max-width: 700px) {
-  .delete-product-box,
-  .delete-meta-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .delete-product-image img {
-    height: 180px;
-  }
-}
-
-.tx-product-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.tx-product-link h3 {
-  transition: 0.2s ease;
-  cursor: pointer;
-}
-
-.tx-product-link:hover h3 {
-  color: #3b82f6;
+.og-explorer-link:hover {
+  background: var(--og-primary-light);
+  color: var(--og-primary-hover);
   text-decoration: underline;
 }
 
-.wallet-action-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
+.og-explorer-link:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: 2px;
 }
 
-.btn-danger {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border: none;
-  border-radius: 16px;
-  padding: 12px 18px;
-  cursor: pointer;
+.og-explorer-link__icon {
+  flex-shrink: 0;
+}
+/* =========================================
+   OLDGOODS WEB3 LOADING SKELETON STYLES
+   Prefix: og-
+========================================= */
+
+/* Class nền tảng cho Product Card */
+.og-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--og-shadow-sm);
+  transition: var(--og-transition);
+}
+
+.og-card__body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+/* Hiệu ứng mờ không cho click */
+.og-skeleton-card {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Shimmer Animation (Hiệu ứng lấp lánh chạy ngang) */
+@keyframes og-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Base style cho mọi thành phần skeleton */
+.og-skeleton-img,
+.og-skeleton-text,
+.og-skeleton-box,
+.og-skeleton-btn {
+  background-color: #e5e7eb;
+  background-image: linear-gradient(
+    90deg,
+    #e5e7eb 0px,
+    #f3f4f6 40px,
+    #e5e7eb 80px
+  );
+  background-size: 200% 100%;
+  animation: og-shimmer 1.5s infinite linear;
+  border-radius: var(--og-radius-md);
+}
+
+/* Các bộ phận cụ thể */
+.og-skeleton-img {
+  width: 100%;
+  height: 200px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.og-skeleton-text {
+  height: 1rem;
+  width: 100%;
+}
+
+.og-skeleton-text--title {
+  width: 50%;
+  height: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Skeleton dạng Grid (2 cột giá tiền/đặt cọc) */
+.og-skeleton-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.og-skeleton-box {
+  height: 3.5rem;
+}
+
+.og-skeleton-btn {
+  height: 2.75rem;
+  width: 100%;
+  margin-top: auto; /* Đẩy nút xuống đáy card */
+  border-radius: var(--og-radius-full);
+}
+/* =========================================
+   OLDGOODS WEB3 CHART STYLES
+   Prefix: og-
+========================================= */
+
+.og-chart-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  box-shadow: var(--og-shadow-sm);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.og-chart-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.og-chart-card__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+}
+
+.og-chart-card__desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--og-text-muted);
+}
+
+.og-chart-card__body {
+  width: 100%;
+  /* Khắc phục lỗi Recharts container đôi khi bị tràn */
+  min-width: 0;
+}
+
+/* Custom Tooltip cho Recharts */
+.og-chart-tooltip {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--og-shadow-md);
+}
+
+.og-chart-tooltip__label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+}
+
+.og-chart-tooltip__value {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+}
+
+.og-chart-tooltip__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+/* =========================================
+   OLDGOODS WEB3 PRODUCT CARD STYLES
+   Prefix: og-
+========================================= */
+
+.og-card:hover {
+  box-shadow: var(--og-shadow-md);
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+}
+
+/* Bọc Hình Ảnh */
+.og-card__img-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--og-border-color);
+  overflow: hidden;
+}
+
+.og-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cắt ảnh lấp đầy khung mà không bị méo */
+  transition: transform 0.3s ease;
+}
+
+.og-card:hover .og-card__img {
+  transform: scale(1.05); /* Zoom nhẹ ảnh khi hover thẻ */
+}
+
+/* Badge Trạng thái nổi lên trên ảnh */
+.og-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Nội dung Text */
+.og-card__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--og-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Hiện ... nếu tiêu đề quá dài */
+}
+
+.og-card__desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--og-text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Chỉ hiện tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5rem; /* Giữ độ cao ổn định kể cả khi desc ngắn */
+}
+
+/* Khung Giá Tiền */
+.og-card__price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-md);
+  padding: 0.75rem;
+  margin: auto 0 0.5rem 0; /* Đẩy khối này xuống đáy nếu content ngắn */
+}
+
+.og-card__price-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.og-card__price-item small {
+  font-size: 0.7rem;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.og-card__price-item strong {
+  font-size: 0.95rem;
+  color: var(--og-text-main);
+}
+
+.og-card__price-item--highlight strong {
+  color: var(--og-primary);
+}
+
+/* Nút bấm trong Card */
+.og-card__actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.og-card__actions-grid .og-btn {
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+/* Ghi chú nhỏ */
+.og-card__note {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--og-danger);
+  text-align: center;
+  background: var(--og-danger-light);
+  padding: 4px;
+  border-radius: 4px;
+}
+/* =========================================
+   OLDGOODS WEB3 MAIN PRODUCT CARD STYLES
+   Prefix: og-
+========================================= */
+
+/* Hàng thông tin ví người bán */
+.og-card__seller-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border: 1px solid var(--og-border-color);
+  padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+  border-radius: var(--og-radius-md);
+  margin-bottom: 0.5rem;
+}
+
+.og-card__seller-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--og-text-main);
+}
+
+.og-text-muted {
+  color: var(--og-text-muted);
+}
+
+/* Hàng chứa Danh mục và Tem bảo đảm */
+.og-card__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.og-mini-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--og-text-muted);
+  background: #f3f4f6;
+  padding: 3px 10px;
+  border-radius: var(--og-radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.og-mini-proof {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--og-success);
+  background: var(--og-success-light);
+  padding: 3px 10px;
+  border-radius: var(--og-radius-full);
+}
+
+/* Nút Xem chi tiết */
+.og-card__action-btn {
+  margin-top: auto; /* Đảm bảo nút luôn nằm sát đáy dù content dài ngắn khác nhau */
+}
+/* =========================================
+   OLDGOODS WEB3 SIDEBAR STYLES
+   Prefix: og-
+========================================= */
+
+.og-sidebar {
+  width: 100%;
+  max-width: 260px; /* Độ rộng tiêu chuẩn cho Sidebar */
+  flex-shrink: 0;
+}
+
+.og-sidebar__inner {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 1.25rem 1rem;
+  box-shadow: var(--og-shadow-sm);
+
+  /* Hiệu ứng trượt bám dính màn hình khi cuộn */
+  position: sticky;
+  top: 5rem;
+}
+
+.og-sidebar__title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--og-text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+}
+
+.og-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.og-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  text-decoration: none;
+  color: var(--og-text-main);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--og-radius-md);
+  transition: var(--og-transition);
+}
+
+.og-sidebar__icon {
+  color: var(--og-text-muted);
+  transition: var(--og-transition);
+}
+
+/* Hiệu ứng khi hover */
+.og-sidebar__link:hover {
+  background: var(--og-sub-bg);
+  color: var(--og-primary);
+}
+
+
+.og-sidebar__link:hover .og-sidebar__icon {
+  color: var(--og-primary);
+}
+
+/* Trạng thái đang Active (Trang hiện tại) */
+.og-sidebar__link--active {
+  background: var(--og-primary-light);
+  color: var(--og-primary);
+  font-weight: 600;
+}
+
+.og-sidebar__link--active .og-sidebar__icon {
+  color: var(--og-primary);
+}
+
+/* Bàn phím điều hướng */
+.og-sidebar__link:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: -2px;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 860px) {
+  .og-sidebar {
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .og-sidebar__inner {
+    position: relative;
+    top: 0;
+  }
+}
+/* =========================================
+   OLDGOODS WEB3 STATS BAR STYLES
+   Prefix: og-
+========================================= */
+
+.og-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.og-stat-card {
+  background: white;
+  border: 1px solid var(--og-border-color);
+  border-radius: var(--og-radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--og-shadow-sm);
+  transition: var(--og-transition);
+}
+
+.og-stat-card:hover {
+  box-shadow: var(--og-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Biểu tượng thống kê */
+.og-stat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Các màu sắc đặc trưng cho từng loại thống kê */
+.og-stat-icon--blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.og-stat-icon--purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.og-stat-icon--orange {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.og-stat-icon--green {
+  background: var(--og-success-light);
+  color: var(--og-success);
+}
+
+/* Khối thông tin chữ */
+.og-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.og-stat-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--og-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.og-stat-value {
+  margin: 0;
+  font-size: 1.5rem;
   font-weight: 800;
+  color: var(--og-text-main);
+  line-height: 1;
+}
+/* =========================================
+   OLDGOODS WEB3 THEME TOGGLE STYLES
+   Prefix: og-
+========================================= */
+
+.og-theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid var(--og-border-color);
+  color: var(--og-text-main);
+  padding: 6px 12px;
+  border-radius: var(--og-radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--og-transition);
+  box-shadow: var(--og-shadow-sm);
+  font-family: inherit;
+}
+
+.og-theme-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: var(--og-shadow-md);
+}
+
+.og-theme-btn:active {
+  transform: scale(0.95);
+}
+
+.og-theme-btn:focus-visible {
+  outline: 2px solid var(--og-primary);
+  outline-offset: 2px;
+}
+
+.og-theme-icon {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Thêm chút hiệu ứng xoay cho icon khi toggle */
+.og-theme-btn:hover .og-theme-icon--sun {
+  transform: rotate(90deg);
+}
+
+.og-theme-btn:hover .og-theme-icon--moon {
+  transform: rotate(-15deg);
+}
+/* =========================================
+   OLDGOODS WEB3 INLINE WALLET CONNECT
+   Prefix: og-
+========================================= */
+
+.og-wallet-connect {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+}
+
+.og-wallet-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--og-success-light);
+  color: var(--og-success);
+  padding: 0.5rem 1rem;
+  border-radius: var(--og-radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.og-wallet-inline span {
+  color: var(--og-text-main);
+}
+
+/* Kế thừa class .og-address-text đã có, nhưng thêm màu cho box này */
+.og-wallet-inline .og-address-text {
+  color: var(--og-success);
+  font-weight: 700;
+}
+/* =========================================
+   FIX LỖI LAYOUT EDIT MODAL (RESPONSIVE)
+   Prefix: og-
+========================================= */
+
+/* 1. Layout chia cột trên Desktop */
+.og-edit-modal-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.og-edit-modal-layout .og-modal-form {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.og-edit-preview-area {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+}
+
+/* 2. Cố định chiều cao vùng xem trước ảnh trong Modal */
+.og-edit-preview-area .og-preview-box {
+  height: 250px;
+  width: 100%;
+  border-radius: var(--og-radius-md);
+  overflow: hidden;
+  background: #f3f4f6;
+  border: 1px solid var(--og-border-color);
+}
+
+.og-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 3. XỬ LÝ CHO MOBILE (QUAN TRỌNG NHẤT) */
+@media (max-width: 768px) {
+  .og-edit-modal-layout {
+    flex-direction: column; /* Ép form và ảnh xếp chồng lên nhau */
+    gap: 1rem;
+  }
+
+  .og-edit-preview-area {
+    width: 100%;
+    order: 2; /* Đẩy ảnh xuống dưới cùng */
+  }
+
+  .og-modal-card {
+    width: 95% !important; /* Mở rộng modal ra gần hết màn hình */
+    max-height: 90vh; /* Giới hạn chiều cao để không bị mất nút */
+    overflow-y: auto; /* Cho phép cuộn dọc khi bật bàn phím ảo */
+    padding: 1rem;
+  }
+
+  .og-modal-row {
+    grid-template-columns: 1fr !important; /* Ép các input rớt dòng */
+  }
+}
+/* Áp dụng biến màu cho toàn bộ hệ thống thẻ */
+
+/* 1. Header & Sidebar */
+.og-header,
+.og-nav,
+.og-nav__link--active,
+.og-sidebar__inner {
+  background-color: var(--og-bg-glass) !important;
+}
+
+/* 2. Toàn bộ các loại Card */
+.og-card,
+.og-hero,
+.og-toolbar,
+.og-hero__stats,
+.og-form-card,
+.og-form-card__header,
+.og-header-card,
+.og-tx-card,
+.og-stat-card,
+.og-chart-card,
+.og-modal-card,
+.og-wallet-card,
+.og-badge--soft,
+.og-mini-badge,
+.og-price-card,
+.og-delete-preview {
+  background-color: var(--og-card-bg) !important;
+  border-color: var(--og-border-color) !important;
+}
+
+/* 3. Các khối phụ bên trong (Khối giá, Khối người bán, Khối danh mục) */
+.og-card__price-grid,
+.og-card__seller-row,
+.og-card__img-wrap,
+.og-delete-preview,
+.og-preview-box,
+.og-notice-box,
+.og-product-detail,
+.og-detail-image,
+.og-tx-proofs,
+.og-empty-state__icon-wrap {
+  background-color: var(--og-sub-bg) !important;
+  border-color: var(--og-border-color) !important;
+}
+
+/* 4. Form & Input */
+.og-input,
+.og-status--deposited,
+.og-timeline-text,
+.og-textarea,
+.og-search,
+.og-modal-header,
+.og-modal-actions,
+.og-theme-btn,
+.og-select {
+  background-color: var(--og-input-bg) !important;
+  color: var(--og-text-main) !important;
+  border-color: var(--og-border-color) !important;
+}
+
+/* 5. Fix màu chữ bị chìm */
+h3,
+h4,
+strong,
+span,
+p {
+  color: var(--og-text-main);
+}
+.og-text-muted,
+small {
+  color: var(--og-text-muted);
 }
