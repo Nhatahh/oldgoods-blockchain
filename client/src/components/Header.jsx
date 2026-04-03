@@ -35,7 +35,7 @@ export default function Header() {
       <div className="og-header__container">
         {/* Left: Brand */}
         <div className="og-brand">
-          <img src={logo} alt="logo" />
+          <img src={logo} alt="logo" className="logo" />
         </div>
 
         {/* Center: Navigation */}
