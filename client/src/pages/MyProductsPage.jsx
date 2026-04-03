@@ -105,7 +105,7 @@ export default function MyProductsPage() {
           <h1 className="og-header-card__title">Sản phẩm của tôi</h1>
           <p className="og-header-card__desc">
             Bạn có thể xem trạng thái, chỉnh sửa hoặc xóa sản phẩm của mình khi
-            chúng còn khả dụng.
+            chúng còn khả dụng (Available).
           </p>
         </div>
 

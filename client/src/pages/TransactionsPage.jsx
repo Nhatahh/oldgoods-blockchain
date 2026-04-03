@@ -98,7 +98,7 @@ export default function TransactionsPage() {
         <h1 className="og-header-card__title">Lịch sử giao dịch</h1>
         <p className="og-header-card__desc">
           Theo dõi toàn bộ tiến trình giao dịch và kiểm chứng (Verify) trạng
-          thái blockchain proof của chợ nội bộ.
+          thái blockchain proof của chợ đồ cũ.
         </p>
       </div>
 

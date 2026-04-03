@@ -46,11 +46,12 @@ export default function HomePage() {
       <section className="og-hero">
         <div className="og-hero__content">
           <span className="og-badge og-badge--primary og-hero__badge">
-            Web3 Marketplace Demo
+            Demo Version
           </span>
-          <h1 className="og-hero__title">
-            Chợ đồ cũ nội bộ - Giao dịch an toàn qua MetaMask
-          </h1>
+          <h1 className="og-hero__title">CHỢ ĐỒ CŨ</h1>
+          <h2 className="og-hero__title">
+            Mua bán rõ ràng – xác thực bằng Blockchain
+          </h2>
           <p className="og-hero__desc">
             Nền tảng mua bán minh bạch với cơ chế đặt cọc thông minh. Dữ liệu
             sản phẩm được tối ưu off-chain, trong khi mọi giao dịch được bảo

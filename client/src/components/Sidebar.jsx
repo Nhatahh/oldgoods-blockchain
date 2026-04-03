@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 const links = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/", label: "Trang chủ", icon: LayoutDashboard },
   { to: "/add-product", label: "Đăng bán", icon: PackagePlus },
   { to: "/my-products", label: "Sản phẩm của tôi", icon: Package },
   { to: "/transactions", label: "Tất cả giao dịch", icon: ArrowLeftRight },
@@ -19,7 +19,7 @@ export default function Sidebar() {
   return (
     <aside className="og-sidebar">
       <div className="og-sidebar__inner">
-        <div className="og-sidebar__title">Workspace</div>
+        <div className="og-sidebar__title">MENU</div>
 
         <nav className="og-sidebar__nav">
           {links.map((item) => {

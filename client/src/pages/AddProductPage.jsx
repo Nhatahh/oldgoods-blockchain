@@ -84,7 +84,7 @@ export default function AddProductPage() {
           <div>
             <h1 className="og-form-card__title">Đăng sản phẩm mới</h1>
             <p className="og-form-card__desc">
-              Thêm món đồ cũ nội bộ và sẵn sàng giao dịch bằng MetaMask.
+              Hãy điền đủ thông tin để người mua có thể dễ dàng lựa chọn.
             </p>
           </div>
         </div>

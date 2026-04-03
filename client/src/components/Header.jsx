@@ -9,6 +9,7 @@ import {
 import { useWallet } from "../context/WalletContext";
 import CopyButton from "./CopyButton";
 import ThemeToggle from "./ThemeToggle";
+import logo from "../images/logo.png";
 
 const NATIVE_SYMBOL = import.meta.env.VITE_NATIVE_SYMBOL || "VLDM";
 
@@ -34,11 +35,7 @@ export default function Header() {
       <div className="og-header__container">
         {/* Left: Brand */}
         <div className="og-brand">
-          <div className="og-brand__logo">OG</div>
-          <div className="og-brand__text">
-            <h2>OldGoods</h2>
-            <p>Web3 Escrow Market</p>
-          </div>
+          <img src={logo} alt="logo" />
         </div>
 
         {/* Center: Navigation */}

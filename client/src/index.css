@@ -279,18 +279,9 @@ body {
   text-decoration: none;
 }
 
-.og-brand__logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, var(--og-primary), #8b5cf6);
-  color: white;
-  font-weight: 800;
-  font-size: 1.1rem;
-  border-radius: var(--og-radius-md);
-  box-shadow: var(--og-shadow-sm);
+.logo {
+  width: 80px;
+  height: 80px;
 }
 
 .og-brand__text h2 {
@@ -2374,7 +2365,6 @@ body {
   background: var(--og-sub-bg);
   color: var(--og-primary);
 }
-
 
 .og-sidebar__link:hover .og-sidebar__icon {
   color: var(--og-primary);

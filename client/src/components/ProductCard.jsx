@@ -42,7 +42,7 @@ export default function ProductCard({ item }) {
               <span className="og-symbol">{NATIVE_SYMBOL}</span>
             </strong>
           </div>
-          <div className="og-card__price-item og-card__price-item--highlight">
+          <div className="og-card__price-item">
             <small>Đặt cọc</small>
             <strong>
               {item.depositNative}{" "}

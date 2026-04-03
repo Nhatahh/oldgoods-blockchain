@@ -50,7 +50,7 @@ export default function MiniStatsChart({ products = [] }) {
       <div className="og-chart-card__header">
         <h3 className="og-chart-card__title">Phân bố trạng thái sản phẩm</h3>
         <p className="og-chart-card__desc">
-          Biểu đồ tổng quan hoạt động trên chợ nội bộ
+          Biểu đồ tổng quan hoạt động trên chợ đồ cũ
         </p>
       </div>
 
