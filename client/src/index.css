@@ -282,6 +282,7 @@ body {
 .logo {
   width: 80px;
   height: 80px;
+  border-radius: 50%;
 }
 
 .og-brand__text h2 {
@@ -2687,6 +2688,7 @@ body {
 .og-modal-header,
 .og-modal-actions,
 .og-theme-btn,
+.og-confirm-box,
 .og-select {
   background-color: var(--og-input-bg) !important;
   color: var(--og-text-main) !important;
