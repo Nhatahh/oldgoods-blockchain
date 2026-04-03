@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+// import { Link, useLocation } from "react-router-dom";
 import {
   Wallet,
   Landmark,
@@ -19,7 +20,7 @@ function shortAddress(addr) {
 }
 
 export default function Header() {
-  const location = useLocation();
+  // const location = useLocation();
   const {
     walletAddress,
     isConnected,
@@ -39,7 +40,7 @@ export default function Header() {
         </div>
 
         {/* Center: Navigation */}
-        <nav className="og-nav">
+        {/* <nav className="og-nav">
           <Link
             className={`og-nav__link ${location.pathname === "/" ? "og-nav__link--active" : ""}`}
             to="/"
@@ -58,7 +59,7 @@ export default function Header() {
           >
             Giao dịch
           </Link>
-        </nav>
+        </nav> */}
 
         {/* Right: Wallet & Actions */}
         <div className="og-wallet-panel">
