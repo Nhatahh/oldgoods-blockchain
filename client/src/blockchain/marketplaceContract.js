@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { ensureValidiumNetwork } from "./network";
-import contractArtifact from "../../../contract/artifacts/contracts/MarketplaceEscrowHash.sol/MarketplaceEscrowHash.json";
+import contractArtifact from "../abi/MarketplaceEscrowHash.json";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 const NATIVE_DECIMALS = Number(import.meta.env.VITE_NATIVE_DECIMALS || 18);
