@@ -78,6 +78,24 @@ export async function ensureValidiumNetwork() {
   return providerAfterSwitch;
 }
 
+export async function requireValidiumNetwork() {
+  if (!window.ethereum) {
+    throw new Error("Không tìm thấy MetaMask. Vui lòng cài đặt MetaMask.");
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const network = await provider.getNetwork();
+  const currentChainId = Number(network.chainId);
+
+  if (currentChainId !== VALIDIUM_CHAIN_ID) {
+    throw new Error(
+      "Vui lòng chuyển MetaMask sang mạng Validium để đăng nhập.",
+    );
+  }
+
+  return provider;
+}
+
 export function registerChainChangedHandler(onInvalidNetwork, onValidNetwork) {
   if (!window.ethereum) return () => {};
 
