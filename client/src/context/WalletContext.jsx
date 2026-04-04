@@ -1,7 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { ethers } from "ethers";
 import api from "../api/api";
-import { ensureValidiumNetwork } from "../blockchain/network";
+import toast from "react-hot-toast";
+import {
+  ensureValidiumNetwork,
+  requireValidiumNetwork,
+} from "../blockchain/network";
 
 const WalletContext = createContext(null);
 
@@ -29,7 +33,7 @@ export function WalletProvider({ children }) {
     try {
       if (!window.ethereum) return;
 
-      const provider = await ensureValidiumNetwork();
+      const provider = await requireValidiumNetwork();
       const network = await provider.getNetwork();
 
       const address = addressParam || walletAddress;
@@ -48,17 +52,16 @@ export function WalletProvider({ children }) {
   const connectWallet = async () => {
     try {
       if (!window.ethereum) {
-        alert("Bạn chưa cài MetaMask");
+        toast.error("Bạn chưa cài MetaMask");
         return;
       }
-
-      // Kiểm tra / ép chuyển sang Validium trước
-      await ensureValidiumNetwork();
 
       // Chỉ sau khi đúng mạng mới xin quyền kết nối tài khoản
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
+
+      await requireValidiumNetwork();
 
       const address = accounts?.[0] || "";
       if (!address) return;
@@ -83,7 +86,8 @@ export function WalletProvider({ children }) {
       return address;
     } catch (error) {
       console.error(error);
-      alert(error.message || "Kết nối ví thất bại");
+      // alert(error.message || "Kết nối ví thất bại");
+      toast.error("Kết nối ví thất bại");
     }
   };
 
@@ -96,12 +100,12 @@ export function WalletProvider({ children }) {
       clearLocalWalletState();
 
       if (!window.ethereum) {
-        alert("Bạn chưa cài MetaMask");
+        // alert("Bạn chưa cài MetaMask");
+        toast.error("Kết nối ví thất bại");
         return;
       }
 
-      // Ép đúng mạng trước
-      await ensureValidiumNetwork();
+      await requireValidiumNetwork();
 
       // Sau đó mới xin quyền chọn tài khoản
       await window.ethereum.request({
@@ -134,7 +138,8 @@ export function WalletProvider({ children }) {
       await refreshWalletInfo(address);
     } catch (error) {
       console.error(error);
-      alert(error.message || "Đổi ví thất bại");
+      // alert(error.message || "Đổi ví thất bại");
+      toast.error("Đổi ví thất bại");
     }
   };
 
@@ -150,7 +155,7 @@ export function WalletProvider({ children }) {
           return;
         }
 
-        await ensureValidiumNetwork();
+        await requireValidiumNetwork();
 
         setWalletAddress(next);
         setIsConnected(true);
@@ -171,20 +176,20 @@ export function WalletProvider({ children }) {
       } catch (error) {
         console.error(error);
 
-        alert("Sai mạng. Chỉ hỗ trợ Validium.");
+        // alert("Sai mạng. Chỉ hỗ trợ Validium.");
+        toast.error("Sai mạng. Chỉ hỗ trợ Validium.");
         clearLocalWalletState();
       }
     };
 
     const handleChainChanged = async () => {
       try {
-        await ensureValidiumNetwork();
+        await requireValidiumNetwork();
         await refreshWalletInfo(walletAddress);
       } catch (error) {
         console.error(error);
-
-        alert("Bạn đang ở sai mạng. Chỉ hỗ trợ Validium.");
-
+        // alert("Bạn đang ở sai mạng. Chỉ hỗ trợ Validium.");
+        toast.error("Bạn đang ở sai mạng. Chỉ hỗ trợ Validium.");
         clearLocalWalletState();
       }
     };
@@ -215,7 +220,7 @@ export function WalletProvider({ children }) {
         if (!window.ethereum) return;
         if (!localStorage.getItem("walletAddress")) return;
 
-        await ensureValidiumNetwork();
+        await requireValidiumNetwork();
         await refreshWalletInfo(localStorage.getItem("walletAddress"));
       } catch (error) {
         console.error(error);

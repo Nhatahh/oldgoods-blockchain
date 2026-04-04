@@ -100,7 +100,7 @@ export function registerChainChangedHandler(onInvalidNetwork, onValidNetwork) {
   if (!window.ethereum) return () => {};
 
   const handler = (chainIdHex) => {
-    const chainId = Number(chainIdHex);
+    const chainId = parseInt(chainIdHex, 16);
 
     if (chainId === VALIDIUM_CHAIN_ID) {
       if (typeof onValidNetwork === "function") onValidNetwork(chainId);

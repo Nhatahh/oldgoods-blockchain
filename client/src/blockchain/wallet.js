@@ -9,7 +9,6 @@ export async function connectWallet() {
     method: "eth_requestAccounts",
   });
 
-  // Chỉ kiểm tra đúng mạng, không tự switch
   const provider = await requireValidiumNetwork();
   const signer = await provider.getSigner();
   const walletAddress = await signer.getAddress();
@@ -55,30 +54,6 @@ export async function getConnectedWallet() {
   }
 
   const provider = await requireValidiumNetwork();
-  const signer = await provider.getSigner();
-  const walletAddress = await signer.getAddress();
-
-  return {
-    provider,
-    signer,
-    walletAddress,
-  };
-}
-
-export async function getConnectedWallet() {
-  if (!window.ethereum) {
-    throw new Error("Không tìm thấy MetaMask.");
-  }
-
-  const accounts = await window.ethereum.request({
-    method: "eth_accounts",
-  });
-
-  if (!accounts || accounts.length === 0) {
-    throw new Error("Chưa có ví nào được kết nối.");
-  }
-
-  const provider = await ensureValidiumNetwork();
   const signer = await provider.getSigner();
   const walletAddress = await signer.getAddress();
 
